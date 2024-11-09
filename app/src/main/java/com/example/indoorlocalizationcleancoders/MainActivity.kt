@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
+import com.example.indoorlocalizationcleancoders.navigation.RegistrationPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,17 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("home"){
                         HomePage(navController = navController)
+                    }
+
+                    composable ("register"){
+                        RegistrationPage(
+                            onRegistrationComplete = {
+                                navController.navigate("login")
+                            },
+                            onNavigateToLogin = {
+                                navController.navigate("login")
+                            }
+                        )
                     }
                 }
             }

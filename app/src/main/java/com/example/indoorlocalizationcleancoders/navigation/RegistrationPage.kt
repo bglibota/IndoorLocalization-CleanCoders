@@ -21,12 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 
 @Composable
-fun LoginPage(navController: NavController,onLoginSuccessful: () -> Unit) {
+fun RegistrationPage(
+    onRegistrationComplete: () -> Unit,
+    onNavigateToLogin : () -> Unit
+) {
+    var first_name : String by remember { mutableStateOf("") }
+    var last_name : String by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier
@@ -35,14 +40,31 @@ fun LoginPage(navController: NavController,onLoginSuccessful: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Prijava", style = MaterialTheme.typography.headlineMedium)
+        Text(text = "Registracija", style = MaterialTheme.typography.headlineMedium)
+
+        TextField(
+            value = first_name,
+            onValueChange = {first_name = it},
+            label = { Text("Ime") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
+            value = last_name,
+            onValueChange = {last_name = it},
+            label = { Text("Prezime") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
             value = username,
             onValueChange = {username = it},
             label = { Text("Korisničko ime") },
-            modifier = Modifier.fillMaxWidth()
-
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -52,21 +74,22 @@ fun LoginPage(navController: NavController,onLoginSuccessful: () -> Unit) {
             onValueChange = {password = it},
             label = { Text("Lozinka") },
             visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(onClick = {
-            onLoginSuccessful()
+            onRegistrationComplete()
         }) {
-            Text(text = "Prijava")
+            Text("Registrirati se")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(onClick = { navController.navigate("register") }) {
-            Text("Nemate račun? Registrirajte se.")
+        TextButton(onClick = {onNavigateToLogin()}) {
+
+            Text("Već imate račun? Prijavite se.")
         }
     }
 }
