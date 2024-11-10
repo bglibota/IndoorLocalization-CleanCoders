@@ -6,5 +6,5 @@ import androidx.navigation.NavController
 
 @Composable
 fun HomePage(navController: NavController){
-    Text(text = "Dobrodošli na početnu stranicu!")
+    Text(text = "Welcome to Home Page!")
 }

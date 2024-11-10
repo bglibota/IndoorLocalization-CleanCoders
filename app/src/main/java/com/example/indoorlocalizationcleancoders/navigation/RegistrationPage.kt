@@ -40,12 +40,12 @@ fun RegistrationPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Registracija", style = MaterialTheme.typography.headlineMedium)
+        Text(text = "Registration", style = MaterialTheme.typography.headlineMedium)
 
         TextField(
             value = first_name,
             onValueChange = {first_name = it},
-            label = { Text("Ime") },
+            label = { Text("First name") },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -54,7 +54,7 @@ fun RegistrationPage(
         TextField(
             value = last_name,
             onValueChange = {last_name = it},
-            label = { Text("Prezime") },
+            label = { Text("Last name") },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -63,7 +63,7 @@ fun RegistrationPage(
         TextField(
             value = username,
             onValueChange = {username = it},
-            label = { Text("Korisničko ime") },
+            label = { Text("Username") },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -72,7 +72,7 @@ fun RegistrationPage(
         TextField(
             value = password,
             onValueChange = {password = it},
-            label = { Text("Lozinka") },
+            label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -82,14 +82,14 @@ fun RegistrationPage(
         Button(onClick = {
             onRegistrationComplete()
         }) {
-            Text("Registrirati se")
+            Text("Register")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = {onNavigateToLogin()}) {
 
-            Text("Već imate račun? Prijavite se.")
+            Text("Already have an account? Login")
         }
     }
 }

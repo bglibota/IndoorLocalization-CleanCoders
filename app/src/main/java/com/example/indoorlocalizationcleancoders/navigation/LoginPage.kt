@@ -35,12 +35,12 @@ fun LoginPage(navController: NavController,onLoginSuccessful: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Prijava", style = MaterialTheme.typography.headlineMedium)
+        Text(text = "Login", style = MaterialTheme.typography.headlineMedium)
 
         TextField(
             value = username,
             onValueChange = {username = it},
-            label = { Text("Korisničko ime") },
+            label = { Text("Username") },
             modifier = Modifier.fillMaxWidth()
 
         )
@@ -50,7 +50,7 @@ fun LoginPage(navController: NavController,onLoginSuccessful: () -> Unit) {
         TextField(
             value = password,
             onValueChange = {password = it},
-            label = { Text("Lozinka") },
+            label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
@@ -60,13 +60,13 @@ fun LoginPage(navController: NavController,onLoginSuccessful: () -> Unit) {
         Button(onClick = {
             onLoginSuccessful()
         }) {
-            Text(text = "Prijava")
+            Text(text = "Login")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = { navController.navigate("register") }) {
-            Text("Nemate račun? Registrirajte se.")
+            Text("Don’t have an account? Register here")
         }
     }
 }
