@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,26 +22,29 @@ class MainActivity : ComponentActivity() {
             MyApp {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "login") {
-                    composable("login"){
+                    composable("login") {
                         LoginPage(
                             navController = navController,
                             onLoginSuccessful = {
-                                navController.navigate("home")
-                            }
+                                navController.navigate("home") {
+                                }
+                            },
+                            context = LocalContext.current
                         )
                     }
-                    composable("home"){
+                    composable("home") {
                         HomePage(navController = navController)
                     }
-
-                    composable ("register"){
+                    composable("register") {
                         RegistrationPage(
                             onRegistrationComplete = {
-                                navController.navigate("login")
+                                navController.navigate("login") {
+                                }
                             },
                             onNavigateToLogin = {
                                 navController.navigate("login")
-                            }
+                            },
+                            context = LocalContext.current
                         )
                     }
                 }
