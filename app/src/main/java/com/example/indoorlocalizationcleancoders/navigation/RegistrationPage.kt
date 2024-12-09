@@ -1,5 +1,6 @@
 package com.example.indoorlocalizationcleancoders.navigation
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,17 +22,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.indoorlocalizationcleancoders.viewmodel.AuthViewModel
 
 @Composable
 fun RegistrationPage(
     onRegistrationComplete: () -> Unit,
-    onNavigateToLogin : () -> Unit
+    onNavigateToLogin: () -> Unit,
+    context: Context
 ) {
-    var first_name : String by remember { mutableStateOf("") }
-    var last_name : String by remember { mutableStateOf("") }
+    val authViewModel: AuthViewModel = viewModel()
+    val registrationStatus = authViewModel.registrationStatus.value
+
+    var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
 
     Column(
         modifier = Modifier
@@ -43,18 +48,9 @@ fun RegistrationPage(
         Text(text = "Registration", style = MaterialTheme.typography.headlineMedium)
 
         TextField(
-            value = first_name,
-            onValueChange = {first_name = it},
-            label = { Text("First name") },
-            modifier = Modifier.fillMaxWidth(),
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = last_name,
-            onValueChange = {last_name = it},
-            label = { Text("Last name") },
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Name") },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -62,7 +58,7 @@ fun RegistrationPage(
 
         TextField(
             value = username,
-            onValueChange = {username = it},
+            onValueChange = { username = it },
             label = { Text("Username") },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -71,7 +67,7 @@ fun RegistrationPage(
 
         TextField(
             value = password,
-            onValueChange = {password = it},
+            onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
@@ -80,15 +76,23 @@ fun RegistrationPage(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(onClick = {
-            onRegistrationComplete()
+            authViewModel.register(context, name, username, password)
+            if (authViewModel.registrationStatus.value == "Registration successful") {
+                onRegistrationComplete()
+            }
         }) {
             Text("Register")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(onClick = {onNavigateToLogin()}) {
+        if (registrationStatus.isNotEmpty()) {
+            Text(text = registrationStatus)
+        }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextButton(onClick = { onNavigateToLogin() }) {
             Text("Already have an account? Login")
         }
     }
