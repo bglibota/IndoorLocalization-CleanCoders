@@ -36,13 +36,10 @@ class MainActivity : ComponentActivity() {
                         HomePage(navController = navController)
                     }
                     composable("register") {
-                        RegistrationPage(
+                        RegistrationPage(navController = navController,
                             onRegistrationComplete = {
                                 navController.navigate("login") {
                                 }
-                            },
-                            onNavigateToLogin = {
-                                navController.navigate("login")
                             },
                             context = LocalContext.current
                         )

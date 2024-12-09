@@ -36,6 +36,7 @@ fun LoginPage(navController: NavController, onLoginSuccessful: () -> Unit, conte
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
 
@@ -73,9 +74,25 @@ fun LoginPage(navController: NavController, onLoginSuccessful: () -> Unit, conte
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         Button(onClick = {
-            scope.launch {
-                authViewModel.login(context, username, password)
+            if (username.isBlank() || password.isBlank()) {
+                errorMessage = "Username and Password cannot be empty"
+            } else if (password.length < 6) {
+                errorMessage = "Password must be at least 6 characters"
+            } else {
+                errorMessage = ""
+                scope.launch {
+                    authViewModel.login(context, username, password)
+                }
             }
         }) {
             Text(text = "Login")

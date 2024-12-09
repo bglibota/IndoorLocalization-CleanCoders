@@ -1,6 +1,7 @@
 package com.example.indoorlocalizationcleancoders.navigation
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,12 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.indoorlocalizationcleancoders.viewmodel.AuthViewModel
 
 @Composable
-fun RegistrationPage(
+fun RegistrationPage(navController: NavController,
     onRegistrationComplete: () -> Unit,
-    onNavigateToLogin: () -> Unit,
     context: Context
 ) {
     val authViewModel: AuthViewModel = viewModel()
@@ -37,6 +39,15 @@ fun RegistrationPage(
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var isRegistering by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(registrationStatus) {
+        if (registrationStatus == "Registration successful") {
+            onRegistrationComplete()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -75,12 +86,39 @@ fun RegistrationPage(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = {
-            authViewModel.register(context, name, username, password)
-            if (authViewModel.registrationStatus.value == "Registration successful") {
-                onRegistrationComplete()
-            }
-        }) {
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        Button(
+            onClick = {
+                if (isRegistering) {
+                    return@Button
+                }
+
+                if (name.isBlank() || username.isBlank() || password.isBlank()) {
+                    errorMessage = "All fields are required"
+                } else if (password.length < 6) {
+                    errorMessage = "Password must be at least 6 characters"
+                } else {
+                    errorMessage = ""
+                    isRegistering = true
+                    authViewModel.register(context, name, username, password)
+
+                    if (authViewModel.registrationStatus.value == "Registration successful") {
+                    } else {
+                        errorMessage = authViewModel.registrationStatus.value
+                        isRegistering = false
+                    }
+                }
+            },
+            enabled = !isRegistering
+        ) {
             Text("Register")
         }
 
@@ -90,9 +128,10 @@ fun RegistrationPage(
             Text(text = registrationStatus)
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(onClick = { onNavigateToLogin() }) {
+        Spacer(modifier = Modifier.height(16.dp))
+        TextButton(onClick = {
+            navController.navigate("login")
+        }) {
             Text("Already have an account? Login")
         }
     }
