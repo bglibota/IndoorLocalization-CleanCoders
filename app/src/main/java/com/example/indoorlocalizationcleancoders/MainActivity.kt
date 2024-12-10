@@ -3,14 +3,20 @@ package com.example.indoorlocalizationcleancoders
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.indoorlocalizationcleancoders.components.BottomNavigationBar
 import com.example.indoorlocalizationcleancoders.navigation.HeatmapReportView
 import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
@@ -22,34 +28,43 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApp {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "login") {
-                    composable("login") {
-                        LoginPage(
-                            navController = navController,
-                            onLoginSuccessful = {
-                                navController.navigate("home") {
-                                }
-                            },
-                            context = LocalContext.current
-                        )
+                Scaffold(
+                    bottomBar = {
+                        if(!isLoginOrRegister(navController))
+                        BottomNavigationBar(navController = navController)
                     }
-                    composable("home") {
-                        HomePage(navController = navController)
-                    }
-                    composable("register") {
-                        RegistrationPage(navController = navController,
-                            onRegistrationComplete = {
-                                navController.navigate("login") {
-                                }
-                            },
-                            context = LocalContext.current
-                        )
-                    }
-                    composable("heatmap"){
-                        HeatmapReportView(navController = navController)
+                ) { padding ->
+                    NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(padding)) {
+                        composable("login") {
+                            LoginPage(
+                                navController = navController,
+                                onLoginSuccessful = {
+                                    navController.navigate("home") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                },
+                                context = LocalContext.current
+                            )
+                        }
+                        composable("home") {
+                            HomePage(navController = navController)
+                        }
+                        composable("register") {
+                            RegistrationPage(
+                                navController = navController,
+                                onRegistrationComplete = {
+                                    navController.navigate("login") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                },
+                                context = LocalContext.current
+                            )
+                        }
+                        composable("heatmap") {
+                            HeatmapReportView(navController = navController)
+                        }
                     }
                 }
-
             }
         }
     }
@@ -69,4 +84,10 @@ fun MyApp(content: @Composable () -> Unit) {
 fun DefaultPreview() {
     MyApp {
     }
+}
+
+@Composable
+fun isLoginOrRegister(navController: NavController): Boolean {
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+    return currentRoute == "login" || currentRoute == "register"
 }

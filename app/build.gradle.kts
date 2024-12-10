@@ -65,5 +65,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.coroutines.android)
 
-    implementation (libs.androidx.material.icons.extended)
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
+    implementation (libs.androidx.navigation.compose.v240alpha01)
 }
