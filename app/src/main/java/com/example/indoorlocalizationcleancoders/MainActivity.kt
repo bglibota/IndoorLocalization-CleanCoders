@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.indoorlocalizationcleancoders.navigation.HeatmapReportView
 import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
 import com.example.indoorlocalizationcleancoders.navigation.RegistrationPage
@@ -44,7 +45,11 @@ class MainActivity : ComponentActivity() {
                             context = LocalContext.current
                         )
                     }
+                    composable("heatmap"){
+                        HeatmapReportView(navController = navController)
+                    }
                 }
+
             }
         }
     }
