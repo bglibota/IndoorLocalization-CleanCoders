@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "IndoorLocalizationCleanCoders"
 include(":app")
+include(":HeatmapReport")
