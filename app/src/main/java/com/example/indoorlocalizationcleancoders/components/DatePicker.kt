@@ -12,7 +12,6 @@ class CustomDatePicker(private val context: Context) {
 
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    // Prikazuje DatePicker dialog i vraća odabrani datum kroz lambdu
     fun show(onDateSelected: (String) -> Unit) {
         val datePickerDialog = DatePickerDialog(
             context,
@@ -28,8 +27,4 @@ class CustomDatePicker(private val context: Context) {
         datePickerDialog.show()
     }
 
-    // Vraća trenutno odabrani datum kao string
-    fun getSelectedDate(): String? {
-        return selectedDate?.let { dateFormatter.format(it) }
-    }
 }
