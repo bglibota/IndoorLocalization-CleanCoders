@@ -1,31 +1,21 @@
-package com.example.indoorlocalizationcleancoders.navigation
+package hr.foi.air.heatmapreport.view
 
 
 import android.annotation.SuppressLint
-import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 
 
 import androidx.compose.runtime.Composable
@@ -39,10 +29,10 @@ import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.indoorlocalizationcleancoders.R
-import com.example.indoorlocalizationcleancoders.components.CustomDatePicker
-import com.example.indoorlocalizationcleancoders.components.CustomTimePicker
-import com.example.indoorlocalizationcleancoders.components.HeaderComponent
+import hr.foi.air.heatmapreport.R
+import hr.foi.air.heatmapreport.view.Components.CustomDatePicker
+import hr.foi.air.heatmapreport.view.Components.CustomTimePicker
+
 import java.util.Date
 
 
@@ -55,16 +45,7 @@ fun HeatmapReportView(navController: NavController){
     val context = LocalContext.current
     val datePicker = remember { CustomDatePicker(context) }
     val selectedDate = remember { mutableStateOf("") }
-    Scaffold(
-        topBar = {
-            HeaderComponent(
-                title = "Generate new report",
-                onBackPressed = {
-                   navController.navigate("home")
-                }
-            )
-        }
-    ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -137,7 +118,7 @@ fun HeatmapReportView(navController: NavController){
         }
 
     }
-    }
+
 }
 
 
