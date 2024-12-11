@@ -1,75 +1,63 @@
 package com.example.indoorlocalizationcleancoders
-
 import android.content.Context
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.MqttCallback
+import org.eclipse.paho.client.mqttv3.MqttClient
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions
+import org.eclipse.paho.client.mqttv3.MqttException
+import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import android.util.Log
-import org.eclipse.paho.android.service.MqttAndroidClient
-import org.eclipse.paho.client.mqttv3.*
 
-class MqttManager(private val context: Context) {
 
-    private val serverUri = "tcp://test.mosquitto.org:1883" // testni URL
-    private val clientId = "AndroidClient_" + System.currentTimeMillis()
-    private lateinit var mqttClient: MqttAndroidClient
+    class MqttHelper(context: Context, private val messageListener: (String) -> Unit) {
 
-    fun connect(topic: String, onMessageReceived: (String) -> Unit) {
-        mqttClient = MqttAndroidClient(context, serverUri, clientId)
+    private val mqttClient: MqttClient
+    private val mqttOptions: MqttConnectOptions
 
-        val options = MqttConnectOptions().apply {
+    init {
+        val serverUri = "tcp://10.0.2.2:1883"  // Zamijenite s vašim MQTT broker URI-jem
+        val clientId = MqttClient.generateClientId()
+        mqttClient = MqttClient(serverUri, clientId, MemoryPersistence())
+
+        mqttOptions = MqttConnectOptions().apply {
             isCleanSession = true
+            connectionTimeout = 10
+            keepAliveInterval = 30
         }
-
-        mqttClient.connect(options, null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                Log.d("MQTT", "Connected to MQTT broker")
-                subscribeToTopic(topic, onMessageReceived)
-            }
-
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.e("MQTT", "Failed to connect: ${exception?.message}")
-            }
-        })
     }
 
-    private fun subscribeToTopic(topic: String, onMessageReceived: (String) -> Unit) {
-        mqttClient.subscribe(topic, 0, null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                Log.d("MQTT", "Subscribed to topic: $topic")
-            }
+    fun connect() {
+        try {
+            mqttClient.connect(mqttOptions)
+            mqttClient.subscribe("your/topic", 0)
 
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.e("MQTT", "Failed to subscribe: ${exception?.message}")
-            }
-        })
+            mqttClient.setCallback(object : MqttCallback {
+                override fun messageArrived(topic: String?, message: MqttMessage?) {
+                    message?.let {
+                        Log.d("MQTT", "Received message: ${it.toString()} on topic: $topic")
+                        messageListener(it.toString())
+                    }
+                }
 
-        mqttClient.setCallback(object : MqttCallback {
-            override fun messageArrived(topic: String?, message: MqttMessage?) {
-                val payload = message?.toString() ?: ""
-                Log.d("MQTT", "Poruka stigla na topicu: $topic, s payloadom: $payload")
-                onMessageReceived(payload)
-            }
+                override fun connectionLost(cause: Throwable?) {
+                    // Upravite gubitak veze
+                }
 
-            override fun connectionLost(cause: Throwable?) {
-                // Ispisuje poruku o grešci ako je veza izgubljena
-                Log.e("MQTT", "Veza izgubljena: ${cause?.message}")
-            }
-
-            override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                // Ispisuje kada je poruka isporučena
-                Log.d("MQTT", "Isporuka poruke dovršena: ${token?.message?.toString()}")
-            }
-        })
-
+                override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                    // Upravite završetak dostave
+                }
+            })
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
     }
 
     fun disconnect() {
-        mqttClient.disconnect(null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                Log.d("MQTT", "Disconnected from MQTT broker")
-            }
-
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.e("MQTT", "Failed to disconnect: ${exception?.message}")
-            }
-        })
+        try {
+            mqttClient.disconnect()
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
     }
 }
