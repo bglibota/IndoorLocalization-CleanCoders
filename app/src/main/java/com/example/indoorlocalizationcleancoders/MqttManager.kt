@@ -1,22 +1,22 @@
 package com.example.indoorlocalizationcleancoders
+
 import android.content.Context
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.MqttCallback
-import org.eclipse.paho.client.mqttv3.MqttClient
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
-import org.eclipse.paho.client.mqttv3.MqttException
-import org.eclipse.paho.client.mqttv3.MqttMessage
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
-import android.util.Log
 
-
-    class MqttHelper(context: Context, private val messageListener: (String) -> Unit) {
-
+class MqttHelper(
+    context: Context,
+    private val messageListener: (TrackedObject) -> Unit
+) {
     private val mqttClient: MqttClient
     private val mqttOptions: MqttConnectOptions
+    private val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    private val jsonAdapter = moshi.adapter(TrackedObject::class.java)
 
     init {
-        val serverUri = "tcp://10.0.2.2:1883"  // Zamijenite s vašim MQTT broker URI-jem
+        val serverUri = "tcp://localhost:1883"  // Zamijenite s vašim MQTT broker URI-jem
         val clientId = MqttClient.generateClientId()
         mqttClient = MqttClient(serverUri, clientId, MemoryPersistence())
 
@@ -30,18 +30,27 @@ import android.util.Log
     fun connect() {
         try {
             mqttClient.connect(mqttOptions)
-            mqttClient.subscribe("your/topic", 0)
+            mqttClient.subscribe("object/position", 0)
 
             mqttClient.setCallback(object : MqttCallback {
                 override fun messageArrived(topic: String?, message: MqttMessage?) {
                     message?.let {
-                        Log.d("MQTT", "Received message: ${it.toString()} on topic: $topic")
-                        messageListener(it.toString())
+                        val messageString = it.toString()
+                        println("Received message: $messageString")  // Logiraj primljenu poruku
+
+                        // Pretvorite JSON u objekt koristeći Moshi
+                        try {
+                            val trackedObject = jsonAdapter.fromJson(messageString)
+                            trackedObject?.let { obj -> messageListener(obj) }  // Pozovi callback s objektom
+                        } catch (e: Exception) {
+                            e.printStackTrace()  // Upravite greške pri parsiranju
+                        }
                     }
                 }
 
                 override fun connectionLost(cause: Throwable?) {
                     // Upravite gubitak veze
+                    println("Connection lost: ${cause?.message}")
                 }
 
                 override fun deliveryComplete(token: IMqttDeliveryToken?) {
