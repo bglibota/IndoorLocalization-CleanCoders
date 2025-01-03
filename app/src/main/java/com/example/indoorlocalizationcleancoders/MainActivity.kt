@@ -63,9 +63,6 @@ class MainActivity : ComponentActivity() {
                         composable("heatmap") {
                             HeatmapPage()
                         }
-                        composable("heatmapPage"){
-                            HeatmapPage()
-                        }
                     }
                 }
             }
