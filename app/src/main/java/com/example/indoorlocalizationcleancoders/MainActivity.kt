@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                             HeaderComponent(
                                 title = navController.currentBackStackEntry?.destination?.route ?: "",
                                 onBackPressed = {
-                                    navController.navigate("home")
+                                    navController.popBackStack()
                                 }
                             )
                         },
