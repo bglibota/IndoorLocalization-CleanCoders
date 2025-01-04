@@ -31,12 +31,23 @@ import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.R
 import hr.foi.air.heatmapreport.view.Components.CustomDatePicker
 import hr.foi.air.heatmapreport.view.Components.CustomTimePicker
+import hr.foi.air.heatmapreport.view.data.models.ReportTypes
+import hr.foi.air.report.interfaces.IReport
 import java.time.LocalDate
 
 import java.util.Date
 
 
+class HeatmapReport(override var _navController: NavController):IReport{
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Composable
+    override fun GetReport() {
+       HeatmapReportView(navController=_navController)
+    }
+
+}
 @RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun HeatmapReportView(navController: NavController){
     var selectedTime = remember { mutableStateOf("12:00") }

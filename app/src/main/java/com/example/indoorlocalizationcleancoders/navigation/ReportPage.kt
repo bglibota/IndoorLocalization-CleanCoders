@@ -28,8 +28,9 @@ import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.R
 import hr.foi.air.heatmapreport.view.Components.CustomDatePicker
 import hr.foi.air.heatmapreport.view.Components.CustomTimePicker
+import hr.foi.air.heatmapreport.view.ReportViews.HeatmapReport
+import hr.foi.air.heatmapreport.view.ReportViews.ZoneReport
 import hr.foi.air.heatmapreport.view.data.models.ReportTypes
-import hr.foi.air.heatmapreport.view.pages.Report
 import hr.foi.air.report.interfaces.IReport
 import java.time.LocalDate
 import java.util.Date
@@ -46,7 +47,7 @@ if(!showReport) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // RadioButton za svaki ReportTypes
+
         Text("Select Report Type:")
         ReportTypes.entries.forEach { reportType ->
             Row(
@@ -69,24 +70,25 @@ if(!showReport) {
             Text(text = "Generate Report")
         }
 
-        // Prikaz izveštaja nakon klika
+
 
 
     }
 }
     if (showReport) {
         Spacer(modifier = Modifier.height(16.dp))
-        ShowReport(selectedReportType, navController)
+        val reportInstance = getReportInstance(selectedReportType, navController)
+        ShowReport(reportInstance)
     }
 }
 
 @Composable
-fun ShowReport(reportTypes: ReportTypes, navController: NavController) {
-    val report: IReport = when (reportTypes) {
-        ReportTypes.HEATMAP_REPORT -> Report(navController)
-        ReportTypes.ZONE_REPORT -> Report(navController)
-        else -> throw IllegalArgumentException("Nepoznat tip izveštaja: $reportTypes")
+fun ShowReport(report: IReport) {
+    report.GetReport()
+}
+fun getReportInstance(reportType: ReportTypes, navController: NavController): IReport {
+    return when (reportType) {
+        ReportTypes.HEATMAP_REPORT -> HeatmapReport(navController)
+        ReportTypes.ZONE_REPORT -> ZoneReport(navController)
     }
-
-    report.GetReport(reportTypes)
 }
