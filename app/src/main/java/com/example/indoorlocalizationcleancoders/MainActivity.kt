@@ -17,10 +17,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.indoorlocalizationcleancoders.components.BottomNavigationBar
-import com.example.indoorlocalizationcleancoders.navigation.HeatmapReportView
+import com.example.indoorlocalizationcleancoders.components.HeaderComponent
 import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
 import com.example.indoorlocalizationcleancoders.navigation.RegistrationPage
+import com.example.indoorlocalizationcleancoders.navigation.ReportPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,16 @@ class MainActivity : ComponentActivity() {
             MyApp {
                 val navController = rememberNavController()
                 Scaffold(
+
+                        topBar = {
+                            HeaderComponent(
+                                title = navController.currentBackStackEntry?.destination?.route ?: "",
+                                onBackPressed = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        },
+
                     bottomBar = {
                         if(!isLoginOrRegister(navController))
                         BottomNavigationBar(navController = navController)
@@ -60,8 +71,8 @@ class MainActivity : ComponentActivity() {
                                 context = LocalContext.current
                             )
                         }
-                        composable("heatmap") {
-                            HeatmapReportView(navController = navController)
+                        composable("report") {
+                            ReportPage(navController = navController)
                         }
                     }
                 }

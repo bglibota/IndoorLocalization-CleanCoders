@@ -68,4 +68,5 @@ dependencies {
     implementation (libs.ui)
     implementation (libs.androidx.material)
     implementation (libs.androidx.navigation.compose.v240alpha01)
+    implementation(project(":Report"))
 }
