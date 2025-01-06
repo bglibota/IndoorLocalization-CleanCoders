@@ -1,8 +1,7 @@
-package hr.foi.air.heatmapreport.view.Views
+package hr.foi.air.heatmapreport.view.Views.Heatmap
 
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.unit.dp
@@ -40,24 +38,25 @@ import java.time.LocalDate
 import java.util.Date
 
 
-class HeatmapReport(override var _navController: NavController): IReport {
+class HeatmapReport(override var _navController: NavController,
+                    override var sharedReportGeneratorVM: ReportGeneratorVM
+): IReport {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     override fun GetReport() {
-       HeatmapReportView(navController=_navController)
+       HeatmapReportView(navController=_navController,sharedReportGeneratorVM)
     }
 
 }
 @RequiresApi(Build.VERSION_CODES.O)
 
+
 @Composable
-fun HeatmapReportView(navController: NavController){
+fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGeneratorVM){
     var selectedStartTime = remember { mutableStateOf("12:00") }
     var selectedEndTime = remember { mutableStateOf("12:00") }
-    val context = LocalContext.current
-    val datePicker = remember { CustomDatePicker(context) }
+    val datePicker = remember { CustomDatePicker(navController.context) }
     val selectedDate = remember { mutableStateOf(DateTimeConverter().ConvertDateToFormat(LocalDate.now().toString(),"dd.MM.yyyy.")) }
-    val reportMng=ReportGeneratorVM(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -123,14 +122,18 @@ fun HeatmapReportView(navController: NavController){
             onTimeSelected = { time -> selectedEndTime.value = time }
         )
         Button(onClick = {
-            reportMng.loadData(
+            /*reportMng.loadData(
                 selectedDate.value,
                 selectedStartTime.value,
-                selectedEndTime.value)
+                selectedEndTime.value)*/
+            reportGeneratorVM.loadData(
+                "13.12.2024.",
+                "05:00",
+                "20:00")
 
-            reportMng.getPositionHistoryData()?.forEach { position ->
-                Log.d("HeatmapReportView", "Position: $position")
-            }
+
+                navController.navigate("main_heatmap_report_view")
+
         }) {
             Text(text = "Generate")
         }
