@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,12 +23,18 @@ import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
 import com.example.indoorlocalizationcleancoders.navigation.RegistrationPage
 import com.example.indoorlocalizationcleancoders.navigation.ReportPage
+import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
+import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVMFactory
+import hr.foi.air.heatmapreport.view.Views.Heatmap.MainHeatmapReportView
+import hr.foi.air.heatmapreport.view.Views.Heatmap.TrackedObjectsView
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp {
+                val sharedReportGeneratorVM: ReportGeneratorVM = viewModel(factory = ReportGeneratorVMFactory(LocalContext.current))
                 val navController = rememberNavController()
                 Scaffold(
 
@@ -72,7 +79,15 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("report") {
-                            ReportPage(navController = navController)
+                            ReportPage(navController = navController, reportGeneratorVM = sharedReportGeneratorVM)
+                        }
+
+
+                        composable("tracked_objects"){
+                           TrackedObjectsView(navController = navController, reportGeneratorVM = sharedReportGeneratorVM)
+                        }
+                        composable("main_heatmap_report_view") {
+                            MainHeatmapReportView(navController = navController, reportGeneratorVM = sharedReportGeneratorVM)
                         }
                     }
                 }
