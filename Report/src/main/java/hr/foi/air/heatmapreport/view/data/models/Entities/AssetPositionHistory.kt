@@ -9,5 +9,4 @@ data class AssetPositionHistory(
     val assetName: String,
     val floorMapId: Int,
     val floorMapName: String
-
 )
