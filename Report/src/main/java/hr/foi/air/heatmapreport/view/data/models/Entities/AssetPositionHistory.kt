@@ -6,6 +6,8 @@ data class AssetPositionHistory(
     val y: Double,
     val dateTime:String,
     val assetId: Int,
-    val floorMapId: Int
+    val assetName: String,
+    val floorMapId: Int,
+    val floorMapName: String
 
 )
