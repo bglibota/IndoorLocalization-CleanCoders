@@ -8,10 +8,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "https://10.0.2.2:7197/"
+    private const val BASE_URL = "http://10.0.2.2:5039/"
 
     fun getApiService(context: Context): IAPIService {
-        val client: OkHttpClient = SafeOkHttpClient.getSafeOkHttpClient(context)
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .build()
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
