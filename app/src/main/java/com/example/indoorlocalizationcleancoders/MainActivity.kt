@@ -21,6 +21,7 @@ import com.example.indoorlocalizationcleancoders.navigation.HeatmapPage
 import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
 import com.example.indoorlocalizationcleancoders.navigation.RegistrationPage
+import com.example.indoorlocalizationcleancoders.navigation.ReportPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +60,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 context = LocalContext.current
                             )
+                        }
+                        composable("report"){
+                            ReportPage(navController = navController)
                         }
                         composable("heatmap") {
                             HeatmapPage()

@@ -70,4 +70,5 @@ dependencies {
     implementation (libs.androidx.navigation.compose.v240alpha01)
 
     implementation (libs.org.eclipse.paho.client.mqttv3)
+    implementation(project(":Report"))
 }

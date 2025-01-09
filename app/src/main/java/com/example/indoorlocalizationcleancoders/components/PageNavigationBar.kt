@@ -40,7 +40,7 @@ fun BottomNavigationBar(
             icon = { Icon(painter = painterResource(id = R.drawable.report), contentDescription = "Reports") },
             label = { Text("Reports") },
             selected = false,
-            onClick = { navController.navigate("reports") }
+            onClick = { navController.navigate("report") }
         )
     }
 }
