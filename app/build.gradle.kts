@@ -69,4 +69,16 @@ dependencies {
     implementation (libs.androidx.material)
     implementation (libs.androidx.navigation.compose.v240alpha01)
     implementation(project(":Report"))
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
+    implementation("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
+
+    // Moshi dependency
+    implementation ("com.squareup.moshi:moshi:1.12.0")
+    implementation ("com.squareup.moshi:moshi-kotlin:1.12.0")
+
+    //Compose animation
+    implementation ("androidx.compose.animation:animation:1.7.6")
+
 }
