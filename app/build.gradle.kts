@@ -68,4 +68,7 @@ dependencies {
     implementation ("com.squareup.moshi:moshi:1.12.0")
     implementation ("com.squareup.moshi:moshi-kotlin:1.12.0")
 
+    //Compose animation
+    implementation ("androidx.compose.animation:animation:1.7.6")
+
 }

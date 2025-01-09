@@ -15,6 +15,8 @@ fun HomePage(navController: NavController) {
     // Kreirajte MQTT pomoćnu klasu
     val mqttHelper = remember {
         MqttHelper(context) { newMessage ->
+            println("Received new position: ${newMessage.id} -> x: ${newMessage.x}, y: ${newMessage.y}")
+
             // Ažuriraj listu objekata unutar glavne niti
             trackedObjects = trackedObjects.toMutableList().apply {
                 val index = indexOfFirst { it.id == newMessage.id }
@@ -39,9 +41,9 @@ fun HomePage(navController: NavController) {
         }
     }
 
+    println("Tracked Objects: $trackedObjects")
     // Prikaz tlocrta s objektima
     FloorMapComposableWithObjects(
         trackedObjects = trackedObjects
     )
 }
-

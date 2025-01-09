@@ -16,7 +16,7 @@ class MqttHelper(
     private val jsonAdapter = moshi.adapter(TrackedObject::class.java)
 
     init {
-        val serverUri = "tcp://localhost:1883"  // Zamijenite s vašim MQTT broker URI-jem
+        val serverUri = "tcp://10.0.2.2:1883" //"tcp://localhost:1883"
         val clientId = MqttClient.generateClientId()
         mqttClient = MqttClient(serverUri, clientId, MemoryPersistence())
 
@@ -36,26 +36,22 @@ class MqttHelper(
                 override fun messageArrived(topic: String?, message: MqttMessage?) {
                     message?.let {
                         val messageString = it.toString()
-                        println("Received message: $messageString")  // Logiraj primljenu poruku
+                        println("Received message: $messageString")
 
-                        // Pretvorite JSON u objekt koristeći Moshi
                         try {
                             val trackedObject = jsonAdapter.fromJson(messageString)
-                            trackedObject?.let { obj -> messageListener(obj) }  // Pozovi callback s objektom
+                            trackedObject?.let { obj -> messageListener(obj) }
                         } catch (e: Exception) {
-                            e.printStackTrace()  // Upravite greške pri parsiranju
+                            e.printStackTrace()
                         }
                     }
                 }
 
                 override fun connectionLost(cause: Throwable?) {
-                    // Upravite gubitak veze
                     println("Connection lost: ${cause?.message}")
                 }
 
-                override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                    // Upravite završetak dostave
-                }
+                override fun deliveryComplete(token: IMqttDeliveryToken?) {}
             })
         } catch (e: MqttException) {
             e.printStackTrace()
