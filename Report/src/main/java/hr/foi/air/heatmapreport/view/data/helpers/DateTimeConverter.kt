@@ -11,7 +11,7 @@ class DateTimeConverter {
     }
     fun ConvertDateToFormat(dateString: String, format: String): String {
         return try {
-            val inputDateFormat = java.text.SimpleDateFormat("dd.MM.yyyy")
+            val inputDateFormat = java.text.SimpleDateFormat("dd/MM/yyyy")
             val date = inputDateFormat.parse(dateString)
 
             val outputDateFormat = java.text.SimpleDateFormat(format)
