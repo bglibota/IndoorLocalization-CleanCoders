@@ -8,10 +8,11 @@ import retrofit2.http.Path
 
 
 interface IAPIService{
-    @GET("/HeatmapReport/GetAllByDateAndTimeRange/{date}/{startTime}/{endTime}")
-    suspend fun getAllByDateAndTimeRange(  @Path("date") date: String,
-                                           @Path("startTime") startTime: String,
-                                           @Path("endTime") endTime: String) : Response<List<AssetPositionHistory>>
+    @GET("/HeatmapReport/GetAssetPositionHistoryByDateRangeAndTimeRange/{startDate}/{endDate}/{startTime}/{endTime}")
+    suspend fun GetAssetPositionHistoryByDateRangeAndTimeRange(@Path("startDate") startDate: String,
+                                                               @Path("endDate") endDate: String,
+                                                               @Path("startTime") startTime: String,
+                                                               @Path("endTime") endTime: String) : Response<List<AssetPositionHistory>>
 
 
 }

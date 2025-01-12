@@ -16,11 +16,11 @@ class ReportGeneratorVM(var _context: Context): ViewModel() {
     val result: LiveData<List<AssetPositionHistory>?> get() = _result
 
 
-    fun loadData(date: String, startTime: String, endTime: String) {
+    fun loadDataHeatmapReport(startDate: String,endDate:String, startTime: String, endTime: String) {
         viewModelScope.launch {
 
             try {
-                val fetchedResult = RestAPI_GET(_context).getAllPositionHistoryByDateAndTimeRange(date, startTime, endTime)
+                val fetchedResult = RestAPI_GET(_context).getAllPositionHistoryByDateAndTimeRange(startDate,endDate, startTime, endTime)
                 _result.value=fetchedResult
 
             } catch (e: Exception) {

@@ -8,11 +8,12 @@ import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistory
 class RestAPI_GET(var context:Context) {
 
     suspend fun getAllPositionHistoryByDateAndTimeRange(
-        date: String, startTime: String, endTime: String
+        startDate: String, endDate:String, startTime: String, endTime: String
     ): List<AssetPositionHistory>? {
         return try {
-            var newDateFormat=DateTimeConverter().ConvertDateToFormat(date,"yyyy-MM-dd")
-            val apiService = ApiClient.getApiService(context).getAllByDateAndTimeRange(newDateFormat, startTime, endTime)
+            var newStartDateFormat=DateTimeConverter().ConvertDateToFormat(startDate,"yyyy-MM-dd")
+            var newEndDateFormat=DateTimeConverter().ConvertDateToFormat(endDate,"yyyy-MM-dd")
+            val apiService = ApiClient.getApiService(context).GetAssetPositionHistoryByDateRangeAndTimeRange(newStartDateFormat,newEndDateFormat, startTime, endTime)
             if (apiService.isSuccessful) {
                 Log.d("ReportGeneratorVMe", "Data loadede: ${apiService.body()}")
 
