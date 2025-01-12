@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package hr.foi.air.heatmapreport.view.Views.Heatmap
 
 
@@ -9,18 +11,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,8 +36,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.R
-import hr.foi.air.heatmapreport.view.Components.CustomDatePicker
 import hr.foi.air.heatmapreport.view.Components.CustomTimePicker
+import hr.foi.air.heatmapreport.view.Components.DateRangePickerDialog
+import hr.foi.air.heatmapreport.view.Components.DialWithDialogExample
+import hr.foi.air.heatmapreport.view.Components.TimePickerDialog
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 import hr.foi.air.heatmapreport.view.data.helpers.DateTimeConverter
 import hr.foi.air.heatmapreport.view.interfaces.IReport
@@ -52,18 +62,57 @@ class HeatmapReport(override var _navController: NavController,
 
 
 @Composable
-fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGeneratorVM){
-    var selectedStartTime = remember { mutableStateOf("12:00") }
-    var selectedEndTime = remember { mutableStateOf("12:00") }
-    val datePicker = remember { CustomDatePicker(navController.context) }
-    val selectedDate = remember { mutableStateOf(DateTimeConverter().ConvertDateToFormat(LocalDate.now().toString(),"dd.MM.yyyy.")) }
+fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGeneratorVM) {
+    val selectedStartTime = remember { mutableStateOf("12:00") }
+    val selectedEndTime = remember { mutableStateOf("12:00") }
+    val selectedStartDate = remember { mutableStateOf<String?>(null) }
+    val selectedEndDate = remember { mutableStateOf<String?>(null) }
+    val showDatePicker = remember { mutableStateOf(false) }
+    val showStartTimePicker = remember { mutableStateOf(false) }
+    val showEndTimePicker = remember { mutableStateOf(false) }
+    // Prikaz DateRangePicker
+    DateRangePickerDialog(
+        isVisible = showDatePicker,
+        onDateRangeSelected = { startDate, endDate ->
+            selectedStartDate.value = startDate
+            selectedEndDate.value = endDate
+            if(endDate!=null && startDate!=null){
+                showDatePicker.value=false
+            }
+        }
+    )
+// TimePicker Dialogs
+    if (showStartTimePicker.value) {
+        DialWithDialogExample(
+            onConfirm = { timePickerState ->
+                val hour = timePickerState.hour
+                val minute = timePickerState.minute
+                selectedStartTime.value = String.format("%02d:%02d", hour, minute)
+                showStartTimePicker.value = false
+            },
+            onDismiss = { showStartTimePicker.value = false }
+        )
+    }
+
+    // TimePicker Dialog for End Time
+    if (showEndTimePicker.value) {
+        DialWithDialogExample(
+            onConfirm = { timePickerState ->
+                val hour = timePickerState.hour
+                val minute = timePickerState.minute
+                selectedEndTime.value = String.format("%02d:%02d", hour, minute)
+                showEndTimePicker.value = false
+            },
+            onDismiss = { showEndTimePicker.value = false }
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    )  {
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -76,71 +125,70 @@ fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGen
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Selected date:",
+                        text = "Selected range:",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
                     Text(
-                        text = selectedDate.value,
+                        text = "Start: ${selectedStartDate.value ?: "Not selected"}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "End: ${selectedEndDate.value ?: "Not selected"}",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-
-                // Calendar button
                 Button(
-                    onClick = {
-                        datePicker.show { date ->
-                            selectedDate.value = date
-                        }
-                    },
+                    onClick = { showDatePicker.value = true }
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.calendar),
-                        contentDescription = "calendar",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+                    Text(text = "Pick Date Range")
                 }
             }
         }
-        CustomTimePicker(
-            title = "Time From",
-
-            initialHour = (Date()).hours,
-            initialMinute = (Date()).minutes,
-            onTimeSelected = { time -> selectedStartTime.value = time }
-        )
-        CustomTimePicker(
-            title = "Time Until",
-
-            initialHour = (Date()).hours,
-            initialMinute = (Date()).minutes,
-            onTimeSelected = { time -> selectedEndTime.value = time }
-        )
+        Column(modifier = Modifier.padding(16.dp)) {
+            TextField(
+                value = selectedStartTime.value,
+                onValueChange = { selectedStartTime.value = it },
+                label = { Text("Start time") },
+                readOnly = true,
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = { showStartTimePicker.value = true }) {
+                        Icon(imageVector = Icons.Sharp.Create, contentDescription = "Time Picker")
+                    }
+                }
+            )
+        }
+        Column(modifier = Modifier.padding(16.dp)) {
+            TextField(
+                value = selectedEndTime.value,
+                onValueChange = { selectedEndTime.value = it },
+                label = { Text("End time") },
+                readOnly = true,
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = { showEndTimePicker.value = true }) {
+                        Icon(imageVector = Icons.Sharp.Create, contentDescription = "Time Picker")
+                    }
+                }
+            )
+        }
         Button(onClick = {
-            /*reportMng.loadData(
-                selectedDate.value,
+            reportGeneratorVM.loadDataHeatmapReport(
+                selectedStartDate.value ?: "01.01.2025.",
+                selectedEndDate.value ?: "01.01.2025.",
                 selectedStartTime.value,
-                selectedEndTime.value)*/
-            reportGeneratorVM.loadData(
-                "13.12.2024.",
-                "05:00",
-                "20:00")
-
-
-                navController.navigate("main_heatmap_report_view")
-
+                selectedEndTime.value
+            )
+            navController.navigate("main_heatmap_report_view")
         }) {
             Text(text = "Generate")
         }
-
     }
-
-
 }
 
 
