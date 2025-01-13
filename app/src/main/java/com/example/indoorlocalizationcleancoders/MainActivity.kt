@@ -26,6 +26,7 @@ import com.example.indoorlocalizationcleancoders.navigation.ReportPage
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVMFactory
 import hr.foi.air.heatmapreport.view.Views.Heatmap.MainHeatmapReportView
+import hr.foi.air.heatmapreport.view.Views.Heatmap.TrackedObjectDetailsView
 import hr.foi.air.heatmapreport.view.Views.Heatmap.TrackedObjectsView
 
 
@@ -88,6 +89,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("main_heatmap_report_view") {
                             MainHeatmapReportView(navController = navController, reportGeneratorVM = sharedReportGeneratorVM)
+                        }
+                        composable("tracked_object_details") {
+                            TrackedObjectDetailsView(navController=navController, reportGeneratorVM = sharedReportGeneratorVM)
                         }
                     }
                 }
