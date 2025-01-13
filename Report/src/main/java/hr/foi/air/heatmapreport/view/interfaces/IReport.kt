@@ -1,12 +1,12 @@
-package hr.foi.air.report.interfaces
+package hr.foi.air.heatmapreport.view.interfaces
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import hr.foi.air.heatmapreport.view.data.models.ReportTypes
-import java.util.Objects
+import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 
 interface IReport {
     abstract var _navController:NavController
+    abstract var sharedReportGeneratorVM:ReportGeneratorVM
     @Composable
     fun GetReport()
 }
