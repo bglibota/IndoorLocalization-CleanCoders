@@ -8,15 +8,40 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import hr.foi.air.heatmapreport.view.data.api.RestAPI_GET
-import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistory
+import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
 import kotlinx.coroutines.launch
 
 class ReportGeneratorVM(var _context: Context): ViewModel() {
-    private val _result = MutableLiveData<List<AssetPositionHistory>?>()
-    val result: LiveData<List<AssetPositionHistory>?> get() = _result
+
+    var selectedStartDate:String=""
+    var selectedEndDate:String=""
+    var selectedStartTime:String=""
+    var selectedEndTime:String=""
+    var selectedFloor:String=""
+
+
+    var selectedObjectDetail: List<AssetPositionHistoryGET>? = null
+
+    private val _result = MutableLiveData<List<AssetPositionHistoryGET>?>()
+    val result: LiveData<List<AssetPositionHistoryGET>?> get() = _result
+
+    private val _modifiedResult = MutableLiveData<List<AssetPositionHistoryGET>>()
+    val modifiedResult: LiveData<List<AssetPositionHistoryGET>> get() = _modifiedResult
+
+
+
+    fun updateModifiedResult(newResult: List<AssetPositionHistoryGET>) {
+        _modifiedResult.value = newResult
+    }
 
 
     fun loadDataHeatmapReport(startDate: String,endDate:String, startTime: String, endTime: String) {
+        selectedStartDate=startDate
+        selectedEndDate=endDate
+        selectedStartTime=startTime
+        selectedEndTime=endTime
+
+
         viewModelScope.launch {
 
             try {
