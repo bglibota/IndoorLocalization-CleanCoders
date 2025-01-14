@@ -63,14 +63,13 @@ class HeatmapReport(override var _navController: NavController,
 
 @Composable
 fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGeneratorVM) {
-    val selectedStartTime = remember { mutableStateOf("12:00") }
-    val selectedEndTime = remember { mutableStateOf("12:00") }
+    val selectedStartTime = remember { mutableStateOf("00:00") }
+    val selectedEndTime = remember { mutableStateOf("23:00") }
     val selectedStartDate = remember { mutableStateOf<String?>(null) }
     val selectedEndDate = remember { mutableStateOf<String?>(null) }
     val showDatePicker = remember { mutableStateOf(false) }
     val showStartTimePicker = remember { mutableStateOf(false) }
     val showEndTimePicker = remember { mutableStateOf(false) }
-    // Prikaz DateRangePicker
     DateRangePickerDialog(
         isVisible = showDatePicker,
         onDateRangeSelected = { startDate, endDate ->
@@ -81,7 +80,6 @@ fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGen
             }
         }
     )
-// TimePicker Dialogs
     if (showStartTimePicker.value) {
         DialWithDialogExample(
             onConfirm = { timePickerState ->
@@ -94,7 +92,6 @@ fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGen
         )
     }
 
-    // TimePicker Dialog for End Time
     if (showEndTimePicker.value) {
         DialWithDialogExample(
             onConfirm = { timePickerState ->
@@ -178,9 +175,10 @@ fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGen
             )
         }
         Button(onClick = {
+
             reportGeneratorVM.loadDataHeatmapReport(
-                selectedStartDate.value ?: "01.01.2025.",
-                selectedEndDate.value ?: "01.01.2025.",
+                selectedStartDate.value ?: "13/01/2025",
+                selectedEndDate.value ?: "13/01/2025",
                 selectedStartTime.value,
                 selectedEndTime.value
             )

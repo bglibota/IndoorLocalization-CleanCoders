@@ -130,10 +130,8 @@ class CustomDatePickerFormatter(
     ): String? {
         if (dateMillis == null) return null
 
-        // Convert CalendarLocale to Java Locale
         val javaLocale = Locale(locale.language, locale.country)
 
-        // Format the date using the provided format and locale
         val dateFormat = SimpleDateFormat(
             if (forContentDescription) rangeFormat else startFormat,
             javaLocale
@@ -144,10 +142,8 @@ class CustomDatePickerFormatter(
     override fun formatMonthYear(monthMillis: Long?, locale: CalendarLocale): String? {
         if (monthMillis == null) return null
 
-        // Convert CalendarLocale to Java Locale
         val javaLocale = Locale(locale.language, locale.country)
 
-        // Format the month and year
         val monthYearFormat = SimpleDateFormat("MMMM yyyy", javaLocale)
         return monthYearFormat.format(Date(monthMillis))
     }
