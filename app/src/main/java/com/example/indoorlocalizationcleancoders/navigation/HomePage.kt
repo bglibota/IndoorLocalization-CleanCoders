@@ -1,23 +1,25 @@
 package com.example.indoorlocalizationcleancoders.navigation
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.indoorlocalizationcleancoders.FloorMapComposableWithObjects
 import com.example.indoorlocalizationcleancoders.MqttHelper
 import com.example.indoorlocalizationcleancoders.TrackedObject
+import hr.foi.air.heatmapreport.view.data.api.Report_RestAPI_POST
+import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryPOST
+import java.time.LocalDateTime
 
 @Composable
 fun HomePage(navController: NavController) {
     val context = LocalContext.current
     var trackedObjects by remember { mutableStateOf(emptyList<TrackedObject>()) }
+    var newMessageState by remember { mutableStateOf<TrackedObject?>(null) } // State to hold the new message
 
     // Kreirajte MQTT pomoćnu klasu
     val mqttHelper = remember {
         MqttHelper(context) { newMessage ->
-            println("Received new position: ${newMessage.id} -> x: ${newMessage.x}, y: ${newMessage.y}")
-
-            // Ažuriraj listu objekata unutar glavne niti
             trackedObjects = trackedObjects.toMutableList().apply {
                 val index = indexOfFirst { it.id == newMessage.id }
                 if (index != -1) {
@@ -26,6 +28,8 @@ fun HomePage(navController: NavController) {
                     add(newMessage)  // Dodaj novi objekt
                 }
             }
+
+            newMessageState = newMessage
         }
     }
 
@@ -41,9 +45,31 @@ fun HomePage(navController: NavController) {
         }
     }
 
-    println("Tracked Objects: $trackedObjects")
+    LaunchedEffect(newMessageState) {
+        newMessageState?.let { newMessage ->
+            val assetPositionHistoryPOST = AssetPositionHistoryPOST(
+                id = null,
+                x = newMessage.x.toDouble(),
+                y = newMessage.y.toDouble(),
+                dateTime = LocalDateTime.now().toString(),
+                assetId = 1,
+                floorMapId = 1
+            )
+
+            try {
+                Log.e("HomePage", "" + assetPositionHistoryPOST)
+                Report_RestAPI_POST().AddAssetPositionHistory(assetPositionHistoryPOST)
+            } catch (e: Exception) {
+                Log.e("HomePage", "Error while adding position history: ${e.message}")
+            }
+        }
+    }
+
     // Prikaz tlocrta s objektima
     FloorMapComposableWithObjects(
         trackedObjects = trackedObjects
     )
 }
+
+
+
