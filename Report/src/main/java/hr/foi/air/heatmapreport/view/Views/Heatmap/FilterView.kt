@@ -28,24 +28,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import hr.foi.air.heatmapreport.R
-import hr.foi.air.heatmapreport.view.Components.CustomTimePicker
 import hr.foi.air.heatmapreport.view.Components.DateRangePickerDialog
 import hr.foi.air.heatmapreport.view.Components.DialWithDialogExample
-import hr.foi.air.heatmapreport.view.Components.TimePickerDialog
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
-import hr.foi.air.heatmapreport.view.data.helpers.DateTimeConverter
 import hr.foi.air.heatmapreport.view.interfaces.IReport
-import java.time.LocalDate
-
-import java.util.Date
 
 
 class HeatmapReport(override var _navController: NavController,
@@ -175,14 +166,12 @@ fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGen
             )
         }
         Button(onClick = {
-
-            reportGeneratorVM.loadDataHeatmapReport(
+            reportGeneratorVM.loadHeatmapReport(
                 selectedStartDate.value ?: "13/01/2025",
                 selectedEndDate.value ?: "13/01/2025",
                 selectedStartTime.value,
                 selectedEndTime.value
             )
-            navController.navigate("main_heatmap_report_view")
         }) {
             Text(text = "Generate")
         }

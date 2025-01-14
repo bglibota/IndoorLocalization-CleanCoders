@@ -5,7 +5,7 @@ import android.util.Log
 import hr.foi.air.heatmapreport.view.data.helpers.DateTimeConverter
 import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
 
-class RestAPI_GET(var context:Context) {
+class RestAPI_GET() {
 
     suspend fun getAllPositionHistoryByDateAndTimeRange(
         startDate: String, endDate:String, startTime: String, endTime: String

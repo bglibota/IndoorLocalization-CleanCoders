@@ -35,8 +35,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp {
-                val sharedReportGeneratorVM: ReportGeneratorVM = viewModel(factory = ReportGeneratorVMFactory(LocalContext.current))
                 val navController = rememberNavController()
+
+                val sharedReportGeneratorVM: ReportGeneratorVM = viewModel(factory = ReportGeneratorVMFactory(navController))
                 Scaffold(
 
                         topBar = {
