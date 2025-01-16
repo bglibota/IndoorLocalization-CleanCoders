@@ -52,9 +52,6 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
         }
 
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-            Text(text = "Summary", style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.height(16.dp))
-
             Text(text = "Selected floor", style = MaterialTheme.typography.bodyMedium)
 
             Box {

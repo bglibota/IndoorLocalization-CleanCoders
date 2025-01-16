@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Create
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,9 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.view.Components.DateRangePickerDialog
 import hr.foi.air.heatmapreport.view.Components.DialWithDialogExample
+import hr.foi.air.heatmapreport.view.Components.ShowDialog
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 import hr.foi.air.heatmapreport.view.interfaces.IReport
 
@@ -61,6 +64,7 @@ fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGen
     val showDatePicker = remember { mutableStateOf(false) }
     val showStartTimePicker = remember { mutableStateOf(false) }
     val showEndTimePicker = remember { mutableStateOf(false) }
+    var showDialog = remember { mutableStateOf(false) }
     DateRangePickerDialog(
         isVisible = showDatePicker,
         onDateRangeSelected = { startDate, endDate ->
@@ -165,15 +169,23 @@ fun HeatmapReportView(navController: NavController, reportGeneratorVM: ReportGen
                 }
             )
         }
+
         Button(onClick = {
+            if(selectedStartDate.value==null || selectedEndDate.value==null){
+                showDialog.value=true
+                return@Button
+            }
             reportGeneratorVM.loadHeatmapReport(
-                selectedStartDate.value ?: "13/01/2025",
-                selectedEndDate.value ?: "13/01/2025",
+                selectedStartDate.value!!,
+                selectedEndDate.value!!,
                 selectedStartTime.value,
                 selectedEndTime.value
             )
         }) {
             Text(text = "Generate")
+        }
+        if (showDialog.value) {
+            ShowDialog(showDialog, "Date is not selected", "Please select date range")
         }
     }
 }
