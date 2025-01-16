@@ -52,7 +52,7 @@ fun HomePage(navController: NavController) {
                 x = newMessage.x.toDouble(),
                 y = newMessage.y.toDouble(),
                 dateTime = LocalDateTime.now().toString(),
-                assetId = 1,
+                assetId = newMessage.db_id,
                 floorMapId = 1
             )
 
