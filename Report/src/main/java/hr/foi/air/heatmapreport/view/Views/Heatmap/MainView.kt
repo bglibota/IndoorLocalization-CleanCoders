@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.R
+import hr.foi.air.heatmapreport.view.Components.HeatmapView
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 
 

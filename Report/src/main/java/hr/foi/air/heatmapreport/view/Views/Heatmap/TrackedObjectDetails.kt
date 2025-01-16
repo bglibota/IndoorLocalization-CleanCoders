@@ -2,7 +2,6 @@ package hr.foi.air.heatmapreport.view.Views.Heatmap
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -25,9 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.R
+import hr.foi.air.heatmapreport.view.Components.HeatmapView
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 import hr.foi.air.heatmapreport.view.data.helpers.DateTimeConverter
-import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

@@ -1,4 +1,4 @@
-package hr.foi.air.heatmapreport.view.Views.Heatmap
+package hr.foi.air.heatmapreport.view.Components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
