@@ -1,6 +1,7 @@
 package hr.foi.air.heatmapreport.view.Views.Heatmap
 
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,33 +31,24 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVMFactory
+import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
 
+var _navController:NavController?=null
+var _reportGeneratorVM:ReportGeneratorVM?=null
 @Composable
 fun TrackedObjectsView(navController: NavController,reportGeneratorVM: ReportGeneratorVM) {
-    var result = reportGeneratorVM.result.observeAsState()
+    _navController=navController
+    _reportGeneratorVM=reportGeneratorVM
+    val modifiedResult by reportGeneratorVM.modifiedResult.observeAsState(initial = emptyList())
 
-    result.let {
+
+
+    modifiedResult.let {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-            Text(
-                text = "Report",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
         Text(
-            text = "10.11.2024 - 08:30 - 13:30",
+            text = reportGeneratorVM.selectedStartDate+"-"+reportGeneratorVM.selectedEndDate+" "+reportGeneratorVM.selectedStartTime+":"+reportGeneratorVM.selectedEndTime,
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -72,8 +65,8 @@ fun TrackedObjectsView(navController: NavController,reportGeneratorVM: ReportGen
 
 
         LazyColumn {
-            items(it.value!!) { item ->
-                TrackedObjectItem(item.x.toString())
+            items(it.map{it.assetName}.distinct().toList(), key = { it }) { item ->
+                TrackedObjectItem(it.filter { it.assetName == item })
             }
         }
     }
@@ -82,12 +75,12 @@ fun TrackedObjectsView(navController: NavController,reportGeneratorVM: ReportGen
 }
 
 @Composable
-fun TrackedObjectItem(name: String) {
+fun TrackedObjectItem(list: List<AssetPositionHistoryGET>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable { OpenItemDetails(name) },
+            .clickable { OpenItemDetails(list) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -96,12 +89,13 @@ fun TrackedObjectItem(name: String) {
             modifier = Modifier.size(40.dp)
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Text(text = name, modifier = Modifier.weight(1f))
+        Text(text = list.first().assetName, modifier = Modifier.weight(1f))
         Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Details")
     }
 }
 
-fun OpenItemDetails(name: String) {
- TODO("Must implement ")
+fun OpenItemDetails(list: List<AssetPositionHistoryGET>) {
+    _reportGeneratorVM!!.selectedObjectDetail=list
+ _navController!!.navigate("tracked_object_details")
 }
 

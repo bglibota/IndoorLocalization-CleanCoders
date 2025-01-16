@@ -1,6 +1,6 @@
 package hr.foi.air.heatmapreport.view.data.models.Entities
 
-data class AssetPositionHistory(
+data class AssetPositionHistoryGET(
     val id: Int,
     val x: Double,
     val y: Double,

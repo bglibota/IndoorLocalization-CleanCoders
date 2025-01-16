@@ -23,6 +23,7 @@ import androidx.compose.animation.core.tween
 
 data class TrackedObject(
     val id: String,
+    val db_id:Int,
     val x: Float,
     val y: Float
 )
