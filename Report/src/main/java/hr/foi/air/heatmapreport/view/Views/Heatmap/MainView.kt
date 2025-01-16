@@ -42,7 +42,7 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
 
     if (result!!.isEmpty()) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-            Text(text = "Loading...", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "No data available", style = MaterialTheme.typography.bodyMedium)
         }
     } else {
         if (reportGeneratorVM.selectedFloor == "") {
