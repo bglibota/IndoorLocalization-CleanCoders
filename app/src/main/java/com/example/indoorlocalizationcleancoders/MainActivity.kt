@@ -1,5 +1,6 @@
 package com.example.indoorlocalizationcleancoders
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,11 +9,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,21 +31,24 @@ import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVMFactory
 import hr.foi.air.heatmapreport.view.Views.Heatmap.MainHeatmapReportView
 import hr.foi.air.heatmapreport.view.Views.Heatmap.TrackedObjectDetailsView
 import hr.foi.air.heatmapreport.view.Views.Heatmap.TrackedObjectsView
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp {
                 val navController = rememberNavController()
-
                 val sharedReportGeneratorVM: ReportGeneratorVM = viewModel(factory = ReportGeneratorVMFactory(navController))
+
                 Scaffold(
 
                         topBar = {
                             HeaderComponent(
-                                title = navController.currentBackStackEntry?.destination?.route ?: "",
+                                title = GetNavBarTitle(navController, sharedReportGeneratorVM),
                                 onBackPressed = {
                                     navController.popBackStack()
                                 }
@@ -103,6 +108,39 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    @Composable
+    private fun GetNavBarTitle(
+        navController: NavHostController,
+        sharedReportGeneratorVM: ReportGeneratorVM
+    ): String {
+        val currentRoute by navController.currentBackStackEntryAsState()
+        var title = ""
+        currentRoute?.destination?.route?.let { route ->
+            title = when (route) {
+                "login" -> "Login"
+                "register" -> "register"
+                "home" -> "Home"
+                "report" -> "Report"
+                "heatmap" -> "Heatmap"
+                "tracked_objects" -> "Tracked Objects" + "\n${ convertDateFormat(sharedReportGeneratorVM.selectedStartDate)} - ${convertDateFormat(sharedReportGeneratorVM.selectedEndDate)}"
+                "main_heatmap_report_view" -> "Main Heatmap Report " + "\n${ convertDateFormat(sharedReportGeneratorVM.selectedStartDate)} - ${convertDateFormat(sharedReportGeneratorVM.selectedEndDate)}"
+                "tracked_object_details" -> "Tracked Object Details" + "\n${ convertDateFormat(sharedReportGeneratorVM.selectedStartDate)} - ${convertDateFormat(sharedReportGeneratorVM.selectedEndDate)}"
+                else -> "Unknown Page"
+            }
+        }
+        return title
+    }
+}
+
+private fun convertDateFormat(date: String): String {
+    val originalFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+    val dateObj = LocalDate.parse(date, originalFormatter)
+
+    val newFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    return dateObj.format(newFormatter)
 }
 
 @Composable
@@ -114,12 +152,6 @@ fun MyApp(content: @Composable () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MyApp {
-    }
-}
 
 @Composable
 fun isLoginOrRegister(navController: NavController): Boolean {
