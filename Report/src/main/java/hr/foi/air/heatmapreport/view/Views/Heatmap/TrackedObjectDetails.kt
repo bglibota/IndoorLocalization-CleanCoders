@@ -62,7 +62,7 @@ fun TrackedObjectDetailsView(navController: NavController, reportGeneratorVM: Re
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.fillMaxSize()
             )
-            HeatmapView(assetPositions = selectedObjectList!!,  500.0, 500.0,10)
+            HeatmapView(assetPositions = selectedObjectList!!)
         }
         Text(
             text = "Object name: ${selectedObjectList!!.first().assetName}",

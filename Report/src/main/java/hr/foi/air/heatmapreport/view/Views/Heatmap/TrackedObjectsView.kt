@@ -65,8 +65,8 @@ fun TrackedObjectsView(navController: NavController,reportGeneratorVM: ReportGen
 
 
         LazyColumn {
-            items(it.groupBy {group-> group.assetName }.values.toList()!!) { item ->
-                TrackedObjectItem(it.filter { filter-> filter.assetName==it.first().assetName })
+            items(it.map{it.assetName}.distinct().toList(), key = { it }) { item ->
+                TrackedObjectItem(it.filter { it.assetName == item })
             }
         }
     }

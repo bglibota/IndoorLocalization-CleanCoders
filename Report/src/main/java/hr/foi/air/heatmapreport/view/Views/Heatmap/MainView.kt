@@ -1,6 +1,5 @@
 package hr.foi.air.heatmapreport.view.Views.Heatmap
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,12 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import hr.foi.air.heatmapreport.R
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
-import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
 
 
 @Composable
@@ -80,7 +77,7 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Number of tracked objects: ${modifiedResult.size}",
+                text = "Number of tracked objects: ${modifiedResult.map { it.assetName }.distinct().size}",
                 style = MaterialTheme.typography.bodyMedium
             )
 
@@ -100,9 +97,11 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
                     painter = painterResource(id = R.drawable.tlocrt),
                     contentDescription = "Floor Map",
                     contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+
                 )
-                HeatmapView(assetPositions = modifiedResult, 500.0,  500.0,10)
+                HeatmapView(assetPositions = modifiedResult)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
