@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.indoorlocalizationcleancoders.components.BottomNavigationBar
 import com.example.indoorlocalizationcleancoders.components.HeaderComponent
+import com.example.indoorlocalizationcleancoders.navigation.HeatmapPage
 import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
 import com.example.indoorlocalizationcleancoders.navigation.RegistrationPage
@@ -93,6 +94,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("tracked_object_details") {
                             TrackedObjectDetailsView(navController=navController, reportGeneratorVM = sharedReportGeneratorVM)
+                        }
+                        composable("heatmap") {
+                            HeatmapPage()
                         }
                     }
                 }
