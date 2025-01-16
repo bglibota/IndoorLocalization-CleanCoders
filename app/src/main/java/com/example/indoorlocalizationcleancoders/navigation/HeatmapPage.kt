@@ -1,12 +1,14 @@
 package com.example.indoorlocalizationcleancoders.navigation
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,10 +23,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.indoorlocalizationcleancoders.MqttHelper
+import com.example.indoorlocalizationcleancoders.R
 import org.json.JSONObject
 
 @Composable
@@ -58,9 +64,18 @@ fun HeatmapPage() {
 
         Box(
             modifier = Modifier
-                .size(300.dp)
-                .background(Color.Gray.copy(alpha = 0.2f))
+                .fillMaxSize()
+
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.tlocrt),
+                contentDescription = "Floor Map",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(600.dp),
+                contentScale = ContentScale.FillBounds
+            )
+
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val canvasWidth = size.width
                 val canvasHeight = size.height
@@ -68,8 +83,8 @@ fun HeatmapPage() {
                 val intensityMap = mutableMapOf<Pair<Float, Float>, Int>()
 
                 positions.forEach { position ->
-                    val normalizedX = (position.x.toFloat() / 300) * canvasWidth
-                    val normalizedY = (position.y.toFloat() / 300) * canvasHeight
+                    val normalizedX = (position.x.toFloat() / 100) * canvasWidth
+                    val normalizedY = (position.y.toFloat() / 100) * canvasHeight
                     val key = Pair(normalizedX, normalizedY)
                     intensityMap[key] = intensityMap.getOrDefault(key, 0) + 1
                 }
