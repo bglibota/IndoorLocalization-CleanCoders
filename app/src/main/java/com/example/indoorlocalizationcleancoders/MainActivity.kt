@@ -93,6 +93,9 @@ class MainActivity : ComponentActivity() {
                         composable("tracked_object_details") {
                             TrackedObjectDetailsView(navController=navController, reportGeneratorVM = sharedReportGeneratorVM)
                         }
+                        composable("heatmap") {
+                            HeatmapPage()
+                        }
                     }
                 }
             }
