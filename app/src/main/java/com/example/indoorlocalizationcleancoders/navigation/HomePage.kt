@@ -21,7 +21,7 @@ fun HomePage(navController: NavController) {
     val mqttHelper = remember {
         MqttHelper(context) { newMessage ->
             trackedObjects = trackedObjects.toMutableList().apply {
-                val index = indexOfFirst { it.AssetId == newMessage.AssetId }
+                val index = indexOfFirst { it.AssetName == newMessage.AssetName }
                 if (index != -1) {
                     this[index] = newMessage  // Ažuriraj postojeći objekt
                 } else {
