@@ -22,9 +22,9 @@ import androidx.compose.animation.core.tween
 
 
 data class TrackedObject(
-    val id: String,
-    val x: Float,
-    val y: Float
+    val AssetName: String,
+    val X: Float,
+    val Y: Float
 )
 
 @Composable
@@ -60,11 +60,11 @@ fun FloorMapComposableWithObjects(
 
             trackedObjects.forEach { obj ->
                 // Skaliranje koordinata prema dimenzijama tlocrta
-                val scaledX = obj.x / 100f * width
-                val scaledY = obj.y / 100f * height
+                val scaledX = obj.X / 100f * width
+                val scaledY = obj.Y / 100f * height
 
                 // Dohvaćanje ili inicijalizacija Animatable za glatku animaciju
-                val animatable = animatableOffsets.getOrPut(obj.id) {
+                val animatable = animatableOffsets.getOrPut(obj.AssetName) {
                     Animatable(scaledX) to Animatable(scaledY)
                 }
 
@@ -89,7 +89,7 @@ fun FloorMapComposableWithObjects(
                 }
 
                 drawContext.canvas.nativeCanvas.drawText(
-                    obj.id,
+                    obj.AssetName,
                     animatable.first.value + 15, // Pomak desno od objekta
                     animatable.second.value + 5, // Lagani pomak dolje
                     textPaint

@@ -15,11 +15,11 @@ fun HomePage(navController: NavController) {
     // Kreirajte MQTT pomoćnu klasu
     val mqttHelper = remember {
         MqttHelper(context) { newMessage ->
-            println("Received new position: ${newMessage.id} -> x: ${newMessage.x}, y: ${newMessage.y}")
+            println("Received new position: ${newMessage.AssetName} -> x: ${newMessage.X}, y: ${newMessage.Y}")
 
             // Ažuriraj listu objekata unutar glavne niti
             trackedObjects = trackedObjects.toMutableList().apply {
-                val index = indexOfFirst { it.id == newMessage.id }
+                val index = indexOfFirst { it.AssetName == newMessage.AssetName }
                 if (index != -1) {
                     this[index] = newMessage  // Ažuriraj postojeći objekt
                 } else {
