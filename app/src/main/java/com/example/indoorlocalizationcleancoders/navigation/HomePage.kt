@@ -21,7 +21,7 @@ fun HomePage(navController: NavController) {
     val mqttHelper = remember {
         MqttHelper(context) { newMessage ->
             trackedObjects = trackedObjects.toMutableList().apply {
-                val index = indexOfFirst { it.id == newMessage.id }
+                val index = indexOfFirst { it.AssetId == newMessage.AssetId }
                 if (index != -1) {
                     this[index] = newMessage  // Ažuriraj postojeći objekt
                 } else {
@@ -45,7 +45,13 @@ fun HomePage(navController: NavController) {
         }
     }
 
+    LaunchedEffect(newMessageState) {
+        newMessageState?.let { newMessage ->
+            Log.d("HomePage", "New message received: $newMessage")
 
+
+        }
+    }
 
     // Prikaz tlocrta s objektima
     FloorMapComposableWithObjects(
