@@ -45,25 +45,7 @@ fun HomePage(navController: NavController) {
         }
     }
 
-    LaunchedEffect(newMessageState) {
-        newMessageState?.let { newMessage ->
-            val assetPositionHistoryPOST = AssetPositionHistoryPOST(
-                id = null,
-                x = newMessage.x.toDouble(),
-                y = newMessage.y.toDouble(),
-                dateTime = LocalDateTime.now().toString(),
-                assetId = newMessage.db_id,
-                floorMapId = 1
-            )
 
-            try {
-                Log.e("HomePage", "" + assetPositionHistoryPOST)
-                Report_RestAPI_POST().AddAssetPositionHistory(assetPositionHistoryPOST)
-            } catch (e: Exception) {
-                Log.e("HomePage", "Error while adding position history: ${e.message}")
-            }
-        }
-    }
 
     // Prikaz tlocrta s objektima
     FloorMapComposableWithObjects(
