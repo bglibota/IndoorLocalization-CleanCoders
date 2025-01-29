@@ -3,6 +3,7 @@ package hr.foi.air.heatmapreport.view.interfaces
 
 import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
 import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryPOST
+import hr.foi.air.heatmapreport.view.data.models.Entities.FloorMap
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,4 +19,8 @@ interface IAPIService{
                                                                @Path("endTime") endTime: String) : Response<List<AssetPositionHistoryGET>>
     @POST("/HeatmapReport/AddAssetPositionHistory")
     suspend fun AddAssetPositionHistory(@Body assetPositionHistoryPOST: AssetPositionHistoryPOST): Response<Int>
+
+    @GET("/api/Floormap/GetAllFloormaps")
+    suspend fun GetAllFloorMaps(): Response<List<FloorMap>>
+
 }
