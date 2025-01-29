@@ -30,12 +30,12 @@ fun BottomNavigationBar(
             selected = false,
             onClick = { navController.navigate("heatmap") }
         )
-        BottomNavigationItem(
+      /*  BottomNavigationItem(
             icon = { Icon(painter = painterResource(id = R.drawable.baseline_add_24), contentDescription = "Zones") },
             label = { Text("Zones") },
             selected = false,
             onClick = { navController.navigate("zones") }
-        )
+        )*/
         BottomNavigationItem(
             icon = { Icon(painter = painterResource(id = R.drawable.report), contentDescription = "Reports") },
             label = { Text("Reports") },
