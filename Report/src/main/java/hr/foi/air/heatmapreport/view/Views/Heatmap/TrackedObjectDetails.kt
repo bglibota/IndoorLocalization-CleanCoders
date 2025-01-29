@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -32,6 +34,7 @@ import hr.foi.air.heatmapreport.view.data.helpers.DateTimeConverter
 @Composable
 fun TrackedObjectDetailsView(navController: NavController, reportGeneratorVM: ReportGeneratorVM){
     val selectedObjectList = reportGeneratorVM.selectedObjectDetail
+    val floormapList by reportGeneratorVM.floormapList.observeAsState(initial = emptyList())
 
     Column(
         modifier = Modifier
@@ -56,7 +59,7 @@ fun TrackedObjectDetailsView(navController: NavController, reportGeneratorVM: Re
         ) {
 
             Image(
-                painter = painterResource(id = R.drawable.tlocrt),
+                painter = reportGeneratorVM.Convert64BaseToBitmapPainter(floormapList!!.first{it.name==reportGeneratorVM.selectedFloor}.image)!!,
                 contentDescription = "Floor Map",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.fillMaxSize()
@@ -68,7 +71,7 @@ fun TrackedObjectDetailsView(navController: NavController, reportGeneratorVM: Re
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
-        LazyColumn {
+        /*LazyColumn {
             items(selectedObjectList) { item ->
                 var localDate=DateTimeConverter().convertDateTimeToCustomFormat(dateTimeString = item.dateTime,format = "dd.MM.yyyy.")
                 var localTime=DateTimeConverter().convertDateTimeToCustomFormat(dateTimeString = item.dateTime,format = "HH:mm")
@@ -79,7 +82,7 @@ fun TrackedObjectDetailsView(navController: NavController, reportGeneratorVM: Re
                 Spacer(modifier = Modifier.height(8.dp))
 
             }
-        }
+        }*/
 
     }
 }

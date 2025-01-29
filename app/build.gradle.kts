@@ -72,7 +72,7 @@ dependencies {
     implementation (libs.org.eclipse.paho.client.mqttv3)
     implementation(project(":Report"))
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
+    implementation ("com.google.code.gson:gson:2.11.0")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
 
