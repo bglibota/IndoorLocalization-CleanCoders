@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import com.example.indoorlocalizationcleancoders.FloorMapComposableWithObjects
 import com.example.indoorlocalizationcleancoders.MqttHelper
 import com.example.indoorlocalizationcleancoders.TrackedObject
-import hr.foi.air.heatmapreport.view.data.api.Report_RestAPI_POST
+import hr.foi.air.heatmapreport.view.data.api.RestAPI_POST
 import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryPOST
 import java.time.LocalDateTime
 
@@ -58,7 +58,7 @@ fun HomePage(navController: NavController) {
 
             try {
                 Log.e("HomePage", "" + assetPositionHistoryPOST)
-                Report_RestAPI_POST().AddAssetPositionHistory(assetPositionHistoryPOST)
+                RestAPI_POST().AddAssetPositionHistory(assetPositionHistoryPOST)
             } catch (e: Exception) {
                 Log.e("HomePage", "Error while adding position history: ${e.message}")
             }
