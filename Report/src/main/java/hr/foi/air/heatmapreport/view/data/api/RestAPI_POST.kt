@@ -1,10 +1,9 @@
 package hr.foi.air.heatmapreport.view.data.api
 
 import android.util.Log
-import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
 import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryPOST
 
-class Report_RestAPI_POST() {
+class RestAPI_POST() {
    suspend fun AddAssetPositionHistory(assetPositionHistoryPOST: AssetPositionHistoryPOST){
 
         val apiService = ApiClient.getApiService().AddAssetPositionHistory(assetPositionHistoryPOST)
