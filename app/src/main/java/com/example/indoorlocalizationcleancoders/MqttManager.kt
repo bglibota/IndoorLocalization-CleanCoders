@@ -65,4 +65,25 @@ class MqttHelper(
             e.printStackTrace()
         }
     }
+
+    fun publishMessage(topic: String, payload: String) {
+        try {
+            val message = MqttMessage(payload.toByteArray())
+            message.qos = 0
+            mqttClient.publish(topic, message)
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
+    }
+    fun subscribe(topic: String, callback: (String) -> Unit) {
+        try {
+            mqttClient.subscribe(topic, 0) { _, message ->
+                val messageString = message.toString()
+                callback(messageString)
+            }
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
+    }
+
 }

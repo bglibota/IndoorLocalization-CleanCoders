@@ -12,32 +12,26 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
-
 
 data class TrackedObject(
-    val id: String,
-    val db_id:Int,
-    val x: Float,
-    val y: Float
+    val AssetName: String,
+    val X: Float,
+    val Y: Float
 )
 
 @Composable
 fun FloorMapComposableWithObjects(
     modifier: Modifier = Modifier,
-    trackedObjects: List<TrackedObject>
+    trackedObjects: List<TrackedObject>,
+    activeFloormap: String // Aktivna floormap-a (path slike)
 ) {
     var floorMapSize by remember { mutableStateOf(IntSize(0, 0)) }
     val coroutineScope = rememberCoroutineScope()
-
-    // Animatable instance za svaki objekt (samo za glatke prijelaze pozicija)
-    val animatableOffsets = remember { mutableMapOf<String, Pair<Animatable<Float, *>, Animatable<Float, *>>>() }
+    val animatableOffsets = remember { mutableStateMapOf<String, Pair<Animatable<Float, *>, Animatable<Float, *>>>() }
 
     Box(
         modifier = modifier
@@ -46,54 +40,53 @@ fun FloorMapComposableWithObjects(
                 floorMapSize = layoutCoordinates.size
             }
     ) {
-        // Prikaz tlocrta
+        // Prikaz aktivnog tlocrta
+        val floorMapResId = when (activeFloormap) {
+            "assets/Tlocrt.png" -> R.drawable.tlocrt
+            "assets/Tlocrt2.jpg" -> R.drawable.tlocrt2
+            "assets/Tlocrt3.png" -> R.drawable.tlocrt3
+            else -> R.drawable.tlocrt // Default ako ne prepoznamo path
+        }
+
         Image(
-            painter = painterResource(id = R.drawable.tlocrt),
+            painter = painterResource(id = floorMapResId),
             contentDescription = "Floor Map",
             contentScale = ContentScale.FillBounds,
             modifier = modifier.fillMaxSize()
         )
 
-        // Crtanje objekata i njihovih oznaka na tlocrtnu mapu
+        // Crtanje objekata na aktivnom tlocrtnom prikazu
         Canvas(modifier = modifier.fillMaxSize()) {
             val width = floorMapSize.width.toFloat()
             val height = floorMapSize.height.toFloat()
 
             trackedObjects.forEach { obj ->
-                // Skaliranje koordinata prema dimenzijama tlocrta
-                val scaledX = obj.x / 100f * width
-                val scaledY = obj.y / 100f * height
+                val scaledX = obj.X / 100f * width
+                val scaledY = obj.Y / 100f * height
 
-                // Dohvaćanje ili inicijalizacija Animatable za glatku animaciju
-                val animatable = animatableOffsets.getOrPut(obj.id) {
+                val animatable = animatableOffsets.getOrPut(obj.AssetName) {
                     Animatable(scaledX) to Animatable(scaledY)
                 }
 
-                // Pokretanje animacije na novu poziciju
                 coroutineScope.launch {
                     animatable.first.animateTo(scaledX)
                     animatable.second.animateTo(scaledY)
                 }
 
-                // Crtanje kružića za objekt
                 drawCircle(
-                    color = Color.Red,
+                    Color.Red,
                     radius = 15f,
                     center = Offset(animatable.first.value, animatable.second.value)
                 )
 
-                // Crtanje oznake (ID-a) pored objekta
-                val textPaint = Paint().asFrameworkPaint().apply {
-                    isAntiAlias = true
-                    textSize = 15.sp.toPx()
-                    color = android.graphics.Color.BLACK
-                }
-
                 drawContext.canvas.nativeCanvas.drawText(
-                    obj.id,
-                    animatable.first.value + 15, // Pomak desno od objekta
-                    animatable.second.value + 5, // Lagani pomak dolje
-                    textPaint
+                    obj.AssetName,
+                    animatable.first.value + 15,
+                    animatable.second.value + 5,
+                    Paint().asFrameworkPaint().apply {
+                        textSize = 40f
+                        color = android.graphics.Color.BLACK
+                    }
                 )
             }
         }
