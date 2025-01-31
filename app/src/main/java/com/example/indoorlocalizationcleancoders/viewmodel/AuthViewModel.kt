@@ -9,6 +9,7 @@ import com.example.indoorlocalizationcleancoders.data.models.LoginRequest
 import com.example.indoorlocalizationcleancoders.data.models.RegisterRequest
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.io.IOException
 
 class AuthViewModel : ViewModel() {
     var loginStatus = mutableStateOf("")
@@ -19,12 +20,18 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             val request = LoginRequest(username, password)
 
-            val response: Response<Void> = ApiClient.getApiService(context).login(request)
+            try {
+                val response: Response<Void> = ApiClient.getApiService(context).login(request)
 
-            if (response.isSuccessful) {
-                loginStatus.value = "Login successful"
-            } else {
-                loginStatus.value = "Login failed"
+                if (response.isSuccessful) {
+                    loginStatus.value = "Login successful"
+                } else {
+                    loginStatus.value = "Login failed"
+                }
+            } catch (e: IOException) {
+                loginStatus.value = "Database connection failed. Please try again later."
+            } catch (e: Exception) {
+                loginStatus.value = "An unexpected error occurred. Please try again."
             }
         }
     }
