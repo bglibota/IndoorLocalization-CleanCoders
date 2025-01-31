@@ -7,9 +7,6 @@ import androidx.navigation.NavController
 import com.example.indoorlocalizationcleancoders.FloorMapComposableWithObjects
 import com.example.indoorlocalizationcleancoders.MqttHelper
 import com.example.indoorlocalizationcleancoders.TrackedObject
-import hr.foi.air.heatmapreport.view.data.api.Report_RestAPI_POST
-import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryPOST
-import java.time.LocalDateTime
 
 @Composable
 fun HomePage(navController: NavController) {
