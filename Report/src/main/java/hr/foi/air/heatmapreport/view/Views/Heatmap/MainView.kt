@@ -55,7 +55,7 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
     var painter by remember { mutableStateOf<BitmapPainter?>(null) }
 
     d("MainHeatmapReportView", "Result: $result")
-    if (result!!.isEmpty()) {
+    if (result!!.isEmpty() || floormapList!!.isEmpty()) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             Text(text = "No data available", style = MaterialTheme.typography.bodyMedium)
         }
@@ -63,6 +63,8 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
         if (reportGeneratorVM.selectedFloor == "") {
             reportGeneratorVM.updateModifiedResult(result!!.filter { it.floorMapId == result!!.first().floorMapId })
             reportGeneratorVM.selectedFloor = result!!.first().floorMapName
+            painter=reportGeneratorVM.Convert64BaseToBitmapPainter(floormapList!!.first().image)
+
             Log.d("MainHeatmapReportViewFloormapList", floormapList?.size.toString())
         }
 
@@ -123,18 +125,18 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
             }
         }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
 
 
-          /*  Button(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth().height(50.dp)
-            ) {
-                Text("Export to PDF")
-            }*/
-        }
+        /*  Button(
+              onClick = { },
+              modifier = Modifier.fillMaxWidth().height(50.dp)
+          ) {
+              Text("Export to PDF")
+          }*/
     }
+}
 
 
 
