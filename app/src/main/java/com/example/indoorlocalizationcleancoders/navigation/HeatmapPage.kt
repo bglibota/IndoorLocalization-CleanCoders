@@ -37,7 +37,7 @@ fun HeatmapPage() {
 
     DisposableEffect(context) {
         val mqttHelper = MqttHelper(context) { trackedObject ->
-            val data = HeatmapData(trackedObject.x.toInt(), trackedObject.y.toInt())
+            val data = HeatmapData(trackedObject.X.toInt(), trackedObject.Y.toInt())
             positions = positions + data
         }
 

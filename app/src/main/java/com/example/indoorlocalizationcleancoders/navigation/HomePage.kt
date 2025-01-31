@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import com.example.indoorlocalizationcleancoders.FloorMapComposableWithObjects
 import com.example.indoorlocalizationcleancoders.MqttHelper
 import com.example.indoorlocalizationcleancoders.TrackedObject
-import hr.foi.air.heatmapreport.view.data.api.RestAPI_POST
+import hr.foi.air.heatmapreport.view.data.api.Report_RestAPI_POST
 import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryPOST
 import java.time.LocalDateTime
 
@@ -21,7 +21,7 @@ fun HomePage(navController: NavController) {
     val mqttHelper = remember {
         MqttHelper(context) { newMessage ->
             trackedObjects = trackedObjects.toMutableList().apply {
-                val index = indexOfFirst { it.id == newMessage.id }
+                val index = indexOfFirst { it.AssetName == newMessage.AssetName }
                 if (index != -1) {
                     this[index] = newMessage  // Ažuriraj postojeći objekt
                 } else {
@@ -47,21 +47,7 @@ fun HomePage(navController: NavController) {
 
     LaunchedEffect(newMessageState) {
         newMessageState?.let { newMessage ->
-            val assetPositionHistoryPOST = AssetPositionHistoryPOST(
-                id = null,
-                x = newMessage.x.toDouble(),
-                y = newMessage.y.toDouble(),
-                dateTime = LocalDateTime.now().toString(),
-                assetId = newMessage.db_id,
-                floorMapId = 1
-            )
-
-            try {
-                Log.e("HomePage", "" + assetPositionHistoryPOST)
-                RestAPI_POST().AddAssetPositionHistory(assetPositionHistoryPOST)
-            } catch (e: Exception) {
-                Log.e("HomePage", "Error while adding position history: ${e.message}")
-            }
+            Log.d("HomePage", "New message received: $newMessage")
         }
     }
 
