@@ -1,7 +1,6 @@
 package com.example.indoorlocalizationcleancoders.navigation
 
-import android.util.Log
-import androidx.compose.foundation.Canvas
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -12,8 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -22,30 +19,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.indoorlocalizationcleancoders.MqttHelper
 import com.example.indoorlocalizationcleancoders.R
-import hr.foi.air.heatmapreport.view.Components.HeatmapView
 
 @Composable
 fun HeatmapPage() {
     var positions by remember { mutableStateOf(listOf<HeatmapData>()) }
     var selectedFloorMap by remember { mutableStateOf("Tlocrt1") }
-    val context = LocalContext.current
-
     var mapWidth by remember { mutableStateOf(0.0) }
     var mapHeight by remember { mutableStateOf(0.0) }
+    val context = LocalContext.current
+
+    val mqttHelper = remember {
+        MqttHelper(context) { trackedObject ->
+            val data = HeatmapData(trackedObject.X.toInt(), trackedObject.Y.toInt(), trackedObject.FloorMapId)
+            if (selectedFloorMap == getFloorMapNameFromId(trackedObject.FloorMapId)) {
+                positions = positions + data
+            }
+        }
+    }
 
     DisposableEffect(context) {
-        val mqttHelper = MqttHelper(context) { trackedObject ->
-            val data = HeatmapData(trackedObject.X.toInt(), trackedObject.Y.toInt())
-
-
-            positions = positions + data
-        }
-
         mqttHelper.connect()
 
         onDispose {
             mqttHelper.disconnect()
         }
+    }
+
+    LaunchedEffect(selectedFloorMap) {
+        positions = emptyList()
     }
 
     Column(
@@ -55,9 +56,6 @@ fun HeatmapPage() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Heatmap Data", fontSize = 24.sp)
-        Spacer(modifier = Modifier.height(16.dp))
-
         var expanded by remember { mutableStateOf(false) }
         val floorMaps = listOf("Tlocrt1", "Tlocrt2", "Tlocrt3")
 
@@ -114,23 +112,21 @@ fun HeatmapPage() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
+                    mapWidth = coordinates.size.width.toDouble()
+                    mapHeight = coordinates.size.height.toDouble()
+                }
         ) {
             Image(
                 painter = painterResource(id = floorMapResId),
                 contentDescription = "Floor Map",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(600.dp)
-                    .onGloballyPositioned { coordinates ->
-                        mapWidth = coordinates.size.width.toDouble()
-                        mapHeight = coordinates.size.height.toDouble()
-                    },
+                    .height(600.dp),
                 contentScale = ContentScale.FillBounds
             )
 
-
-
-            if (mapWidth > 0 && mapHeight > 0) {
+            if (positions.isNotEmpty()) {
                 HeatmapViewLive(positions, mapWidth = mapWidth, mapHeight = mapHeight, size = 1)
             }
         }
@@ -139,4 +135,15 @@ fun HeatmapPage() {
     }
 }
 
-data class HeatmapData(val x: Int, val y: Int, val intensity: Float = 0f)
+data class HeatmapData(val x: Int, val y: Int, val FloorMapId: Int, val intensity: Float = 0f)
+
+fun getFloorMapNameFromId(floorMapId: Int): String {
+    return when (floorMapId) {
+        1 -> "Tlocrt1"
+        2 -> "Tlocrt2"
+        3 -> "Tlocrt3"
+        else -> "Tlocrt1"
+    }
+}
+
+

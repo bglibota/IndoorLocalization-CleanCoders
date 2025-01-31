@@ -24,7 +24,9 @@ import androidx.compose.animation.core.tween
 data class TrackedObject(
     val AssetName: String,
     val X: Float,
-    val Y: Float
+    val Y: Float,
+    val AssetId: Int,
+    val FloorMapId: Int
 )
 
 @Composable
