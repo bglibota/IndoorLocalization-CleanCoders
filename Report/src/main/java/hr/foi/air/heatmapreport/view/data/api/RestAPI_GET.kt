@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import hr.foi.air.heatmapreport.view.data.helpers.DateTimeConverter
 import hr.foi.air.heatmapreport.view.data.models.Entities.AssetPositionHistoryGET
+import hr.foi.air.heatmapreport.view.data.models.Entities.FloorMap
 
 class RestAPI_GET() {
 
@@ -25,6 +26,24 @@ class RestAPI_GET() {
         } catch (e: Exception) {
             Log.e("ReportGeneratorVM", "Error fetching data", e)
             null
+        }
+    }
+
+    suspend fun getAllFloorMaps(): List<FloorMap>? {
+
+        return try {
+            val apiService = ApiClient.getApiService().GetAllFloorMaps()
+            if (apiService.isSuccessful) {
+                apiService.body()
+            }
+            else {
+                Log.e("ReportGeneratorVM", "Error response: ${apiService.errorBody()?.string()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("ReportGeneratorVM", "Error fetching data", e)
+            null
+
         }
     }
 }

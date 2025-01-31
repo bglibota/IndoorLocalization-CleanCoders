@@ -63,7 +63,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.coroutines.android)
-
+    implementation ("com.google.code.gson:gson:2.11.0")
     implementation (libs.ui)
     implementation (libs.androidx.material)
     implementation (libs.androidx.navigation.compose.v240alpha01)
