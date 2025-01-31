@@ -12,12 +12,10 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.launch
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 
 data class TrackedObject(
     val AssetName: String,
@@ -33,7 +31,7 @@ fun FloorMapComposableWithObjects(
 ) {
     var floorMapSize by remember { mutableStateOf(IntSize(0, 0)) }
     val coroutineScope = rememberCoroutineScope()
-    val animatableOffsets = remember { mutableMapOf<String, Pair<Animatable<Float, *>, Animatable<Float, *>>>() }
+    val animatableOffsets = remember { mutableStateMapOf<String, Pair<Animatable<Float, *>, Animatable<Float, *>>>() }
 
     Box(
         modifier = modifier
@@ -71,13 +69,21 @@ fun FloorMapComposableWithObjects(
                 }
 
                 coroutineScope.launch {
-                    animatable.first.animateTo(scaledX, animationSpec = tween(durationMillis = 500))
-                    animatable.second.animateTo(scaledY, animationSpec = tween(durationMillis = 500))
+                    animatable.first.animateTo(scaledX)
+                    animatable.second.animateTo(scaledY)
                 }
 
-                drawCircle(Color.Red, radius = 10f, center = Offset(animatable.first.value, animatable.second.value))
+                drawCircle(
+                    Color.Red,
+                    radius = 15f,
+                    center = Offset(animatable.first.value, animatable.second.value)
+                )
+
                 drawContext.canvas.nativeCanvas.drawText(
-                    obj.AssetName, animatable.first.value, animatable.second.value, Paint().asFrameworkPaint().apply {
+                    obj.AssetName,
+                    animatable.first.value + 15,
+                    animatable.second.value + 5,
+                    Paint().asFrameworkPaint().apply {
                         textSize = 40f
                         color = android.graphics.Color.BLACK
                     }
