@@ -20,7 +20,7 @@ interface IAPIService{
     @POST("/HeatmapReport/AddAssetPositionHistory")
     suspend fun AddAssetPositionHistory(@Body assetPositionHistoryPOST: AssetPositionHistoryPOST): Response<Int>
 
-    @GET("/api/Floormap/GetAllFloormaps")
+    @GET("/api/FloorMap/GetAllFloorMapsWithoutAssetHistories")
     suspend fun GetAllFloorMaps(): Response<List<FloorMap>>
 
 }
