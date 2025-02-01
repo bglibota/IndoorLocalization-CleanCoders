@@ -24,6 +24,7 @@ import com.example.indoorlocalizationcleancoders.components.HeaderComponent
 import com.example.indoorlocalizationcleancoders.navigation.HeatmapPage
 import com.example.indoorlocalizationcleancoders.navigation.HomePage
 import com.example.indoorlocalizationcleancoders.navigation.LoginPage
+import com.example.indoorlocalizationcleancoders.navigation.ProfilePage
 import com.example.indoorlocalizationcleancoders.navigation.RegistrationPage
 import com.example.indoorlocalizationcleancoders.navigation.ReportPage
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
@@ -75,6 +76,9 @@ class MainActivity : ComponentActivity() {
                         composable("home") {
                             HomePage(navController = navController)
                         }
+                        composable("profile"){
+                            ProfilePage(context = LocalContext.current, navController = navController)
+                        }
                         composable("register") {
                             RegistrationPage(
                                 navController = navController,
@@ -123,6 +127,7 @@ class MainActivity : ComponentActivity() {
                 "home" -> "Home"
                 "report" -> "Report"
                 "heatmap" -> "Heatmap"
+                "profile" -> "Profile"
                 "tracked_objects" -> "Tracked Objects" + "\n${ convertDateFormat(sharedReportGeneratorVM.selectedStartDate)} - ${convertDateFormat(sharedReportGeneratorVM.selectedEndDate)}"
                 "main_heatmap_report_view" -> "Main Heatmap Report " + "\n${ convertDateFormat(sharedReportGeneratorVM.selectedStartDate)} - ${convertDateFormat(sharedReportGeneratorVM.selectedEndDate)}"
                 "tracked_object_details" -> "Tracked Object Details" + "\n${ convertDateFormat(sharedReportGeneratorVM.selectedStartDate)} - ${convertDateFormat(sharedReportGeneratorVM.selectedEndDate)}"
