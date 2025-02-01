@@ -32,7 +32,7 @@ fun HeatmapViewLive(
 
             drawCircle(
                 color = color,
-                radius = 10f * count * size,
+                radius = 15f * count * size,
                 center = Offset(scaleX.toFloat(), scaleY.toFloat())
             )
         }
