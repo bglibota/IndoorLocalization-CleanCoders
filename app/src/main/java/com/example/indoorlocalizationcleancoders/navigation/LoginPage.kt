@@ -83,6 +83,8 @@ fun LoginPage(navController: NavController, onLoginSuccessful: () -> Unit, conte
             Spacer(modifier = Modifier.height(8.dp))
         }
 
+
+
         Button(onClick = {
             if (username.isBlank() || password.isBlank()) {
                 errorMessage = "Username and Password cannot be empty"
