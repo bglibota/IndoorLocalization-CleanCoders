@@ -1,7 +1,6 @@
 package com.example.indoorlocalizationcleancoders.navigation
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,7 +28,8 @@ import androidx.navigation.NavController
 import com.example.indoorlocalizationcleancoders.viewmodel.AuthViewModel
 
 @Composable
-fun RegistrationPage(navController: NavController,
+fun RegistrationPage(
+    navController: NavController,
     onRegistrationComplete: () -> Unit,
     context: Context
 ) {
@@ -38,10 +38,11 @@ fun RegistrationPage(navController: NavController,
 
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var repeatPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     var isRegistering by remember { mutableStateOf(false) }
-
 
     LaunchedEffect(registrationStatus) {
         if (registrationStatus == "Registration successful") {
@@ -77,9 +78,28 @@ fun RegistrationPage(navController: NavController,
         Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
+            value = repeatPassword,
+            onValueChange = { repeatPassword = it },
+            label = { Text("Repeat Password") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -97,23 +117,22 @@ fun RegistrationPage(navController: NavController,
 
         Button(
             onClick = {
-                if (isRegistering) {
-                    return@Button
-                }
+                if (isRegistering) return@Button
 
-                if (name.isBlank() || username.isBlank() || password.isBlank()) {
-                    errorMessage = "All fields are required"
-                } else if (password.length < 6) {
-                    errorMessage = "Password must be at least 6 characters"
-                } else {
-                    errorMessage = ""
-                    isRegistering = true
-                    authViewModel.register(context, name, username, password)
-
-                    if (authViewModel.registrationStatus.value == "Registration successful") {
-                    } else {
-                        errorMessage = authViewModel.registrationStatus.value
-                        isRegistering = false
+                when {
+                    name.isBlank() || username.isBlank() || password.isBlank() || email.isBlank() -> {
+                        errorMessage = "All fields are required."
+                    }
+                    password != repeatPassword -> {
+                        errorMessage = "Passwords do not match."
+                    }
+                    password.length < 6 -> {
+                        errorMessage = "Password must be at least 6 characters."
+                    }
+                    else -> {
+                        errorMessage = ""
+                        isRegistering = true
+                        authViewModel.register(context, name, username, password, email)
                     }
                 }
             },
@@ -129,6 +148,7 @@ fun RegistrationPage(navController: NavController,
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
         TextButton(onClick = {
             navController.navigate("login")
         }) {

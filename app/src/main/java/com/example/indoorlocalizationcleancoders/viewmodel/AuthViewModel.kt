@@ -44,9 +44,9 @@ class AuthViewModel : ViewModel() {
 
 
 
-    fun register(context: Context, name: String, username: String, password: String) {
+    fun register(context: Context, name: String, username: String, password: String, email: String) {
         viewModelScope.launch {
-            val request = RegisterRequest(name, username, password)
+            val request = RegisterRequest(name, username, password, email)
             val response: Response<Void> = ApiClient.getApiService(context).register(request)
 
             if (response.isSuccessful) {
