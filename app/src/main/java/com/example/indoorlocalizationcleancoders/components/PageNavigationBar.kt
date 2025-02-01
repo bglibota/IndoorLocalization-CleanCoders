@@ -4,6 +4,8 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
@@ -41,6 +43,12 @@ fun BottomNavigationBar(
             label = { Text("Reports") },
             selected = false,
             onClick = { navController.navigate("report") }
+        )
+        BottomNavigationItem(
+            icon = { Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Profile") },
+            label = { Text("Profile") },
+            selected = false,
+            onClick = { navController.navigate("profile") }
         )
     }
 }
