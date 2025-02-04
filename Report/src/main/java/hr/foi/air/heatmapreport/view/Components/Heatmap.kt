@@ -1,8 +1,10 @@
 package hr.foi.air.heatmapreport.view.Components
 
+import android.util.Log.d
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,27 +20,27 @@ import kotlin.math.pow
 @Composable
 fun HeatmapView(
     assetPositions: List<AssetPositionHistoryGET>,
-    heatmapWidth: Double = 900.0,
-    heatmapHeight: Double = 1200.0,
-    offsetX: Double = 67.0,
-    offsetY: Double = 40.0
 ) {
-
-
-    Box(modifier = Modifier.size(450.dp)) {
-        Canvas(modifier = Modifier
-            .size(150.dp)
+    Canvas(modifier = Modifier
+            .fillMaxSize()
 
         ) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+            val offsetX=canvasWidth*0.025
+            val offsetY=canvasHeight*0.025
+            val scaleFactor = 1.08f
+
+            d("HeatmapViewDims", "Canvas Width: $canvasWidth, Canvas Height: $canvasHeight")
             assetPositions.forEach { position ->
-                val scaleX = (position.x / 100.0) * heatmapWidth+offsetX
-                val scaleY = (position.y / 100.0) * heatmapHeight+offsetY
+
 
                 val count = assetPositions.count {
                     abs(it.x - position.x) <= 6 && abs(it.y - position.y) <= 6
                 }
+                val scaleX = (position.x / 100.0) * canvasWidth/scaleFactor+offsetX
+                val scaleY = (position.y / 100.0) * canvasHeight/scaleFactor+offsetY
                 val baseRadius = 10f
-                val scaleFactor = 2.5f
                 val color = getColorForDensity(count)
                 drawCircle(
                     color = color,
@@ -49,7 +51,7 @@ fun HeatmapView(
         }
 
 
-    }
+
 }
 
 fun getColorForDensity(density: Int): Color {

@@ -41,6 +41,8 @@ import hr.foi.air.heatmapreport.R
 import hr.foi.air.heatmapreport.view.Components.HeatmapView
 import hr.foi.air.heatmapreport.view.ViewModels.ReportGeneratorVM
 import android.util.Base64
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import hr.foi.air.heatmapreport.view.data.models.Entities.FloorMap
 
 
@@ -109,8 +111,8 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
             Text(text = "Heatmap", style = MaterialTheme.typography.bodySmall)
             Box(
                 modifier = Modifier
-                    .size(1000.dp)
-                    .border(1.dp, Color.Gray)
+                    .fillMaxSize()
+
             ) {
                 Log.d("MainHeatmapReportViewPainter", "Painter: $painter")
                 if (painter != null) {
@@ -118,7 +120,7 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
                         painter = painter!!,
                         contentDescription = "Base64 Image",
                         contentScale = ContentScale.FillBounds,
-                        modifier = Modifier.size(500.dp)
+                        modifier = Modifier.fillMaxSize()
                     )
                     HeatmapView(assetPositions = modifiedResult)
                 }
