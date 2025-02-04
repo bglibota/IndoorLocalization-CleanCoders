@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.indoorlocalizationcleancoders.MqttHelper
 import com.example.indoorlocalizationcleancoders.R
+import com.example.indoorlocalizationcleancoders.data.models.HeatmapData
 
 @Composable
 fun HeatmapPage() {
@@ -134,7 +135,6 @@ fun HeatmapPage() {
     }
 }
 
-data class HeatmapData(val x: Int, val y: Int, val FloorMapId: Int, val intensity: Float = 0f)
 
 fun getFloorMapNameFromId(floorMapId: Int): String {
     return when (floorMapId) {

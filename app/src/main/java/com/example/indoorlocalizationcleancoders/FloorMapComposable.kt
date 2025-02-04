@@ -29,7 +29,7 @@ data class TrackedObject(
 fun FloorMapComposableWithObjects(
     modifier: Modifier = Modifier,
     trackedObjects: List<TrackedObject>,
-    activeFloormap: String // Aktivna floormap-a (path slike)
+    activeFloormap: String
 ) {
     var floorMapSize by remember { mutableStateOf(IntSize(0, 0)) }
     val coroutineScope = rememberCoroutineScope()
@@ -42,12 +42,11 @@ fun FloorMapComposableWithObjects(
                 floorMapSize = layoutCoordinates.size
             }
     ) {
-        // Prikaz aktivnog tlocrta
         val floorMapResId = when (activeFloormap) {
             "assets/Tlocrt.png" -> R.drawable.tlocrt
             "assets/Tlocrt2.jpg" -> R.drawable.tlocrt2
             "assets/Tlocrt3.png" -> R.drawable.tlocrt3
-            else -> R.drawable.tlocrt // Default ako ne prepoznamo path
+            else -> R.drawable.tlocrt
         }
 
         Image(
@@ -57,7 +56,6 @@ fun FloorMapComposableWithObjects(
             modifier = modifier.fillMaxSize()
         )
 
-        // Crtanje objekata na aktivnom tlocrtnom prikazu
         Canvas(modifier = modifier.fillMaxSize()) {
             val width = floorMapSize.width.toFloat()
             val height = floorMapSize.height.toFloat()
