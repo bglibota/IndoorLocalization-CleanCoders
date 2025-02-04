@@ -52,7 +52,7 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
     val floormapList by reportGeneratorVM.floormapList.observeAsState(initial = emptyList())
     var expanded by remember { mutableStateOf(false) }
 
-    var painter by remember { mutableStateOf<BitmapPainter?>(null) }
+    var painter by remember { mutableStateOf<BitmapPainter?>(reportGeneratorVM.Convert64BaseToBitmapPainter(floormapList?.first()!!.image)) }
 
     d("MainHeatmapReportView", "Result: $result")
     if (result!!.isEmpty() || floormapList!!.isEmpty()) {
