@@ -1,6 +1,7 @@
 package com.example.indoorlocalizationcleancoders
 
 import android.content.Context
+import com.example.indoorlocalizationcleancoders.data.models.TrackedObject
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.eclipse.paho.client.mqttv3.*

@@ -16,14 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.launch
 import androidx.compose.animation.core.Animatable
+import com.example.indoorlocalizationcleancoders.data.models.TrackedObject
 
-data class TrackedObject(
-    val AssetName: String,
-    val X: Float,
-    val Y: Float,
-    val AssetId: Int,
-    val FloorMapId: Int
-)
 
 @Composable
 fun FloorMapComposableWithObjects(

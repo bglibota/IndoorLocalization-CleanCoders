@@ -5,11 +5,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.indoorlocalizationcleancoders.FloorMapComposableWithObjects
 import com.example.indoorlocalizationcleancoders.MqttHelper
-import com.example.indoorlocalizationcleancoders.TrackedObject
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import com.example.indoorlocalizationcleancoders.data.models.TrackedObject
 
 @Composable
 fun HomePage(navController: NavController) {

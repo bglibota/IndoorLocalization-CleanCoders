@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import com.example.indoorlocalizationcleancoders.data.models.HeatmapData
 
 @Composable
 fun HeatmapViewLive(
