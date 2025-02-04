@@ -63,8 +63,8 @@ fun MainHeatmapReportView(navController: NavController, reportGeneratorVM: Repor
         }
     } else {
         if (reportGeneratorVM.selectedFloor == "") {
-            reportGeneratorVM.updateModifiedResult(result!!.filter { it.floorMapId == result!!.first().floorMapId })
-            reportGeneratorVM.selectedFloor = result!!.first().floorMapName
+            reportGeneratorVM.updateModifiedResult(result!!.filter { it.floorMapId == floormapList!!.first().id })
+            reportGeneratorVM.selectedFloor = floormapList!!.first().name
             painter=reportGeneratorVM.Convert64BaseToBitmapPainter(floormapList!!.first().image)
 
             Log.d("MainHeatmapReportViewFloormapList", floormapList?.size.toString())
